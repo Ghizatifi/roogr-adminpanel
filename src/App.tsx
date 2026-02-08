@@ -1,76 +1,76 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense, type ReactNode } from 'react';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import Loader from './common/Loader';
 import DefaultLayout from './layout/DefaultLayout';
 import Guard from './components/guards/Guards';
-import Users from './pages/users/users';
-import Advertiser from './pages/users/advertiser';
-import Customer from './pages/users/Customer';
-import SignIn from './pages/Authentication/SignIn';
 import LoginLayout from './layout/LoginLayout';
 import LandingLayout from './layout/LandingLayout';
-import LandingHome from './pages/landing/LandingHome';
-import AboutUs from './pages/landing/AboutUs';
-import HowToDeleteAccount from './pages/landing/HowToDeleteAccount';
-import PrivacyPolicy from './pages/landing/PrivacyPolicy';
 import { I18nextProvider } from 'react-i18next';
-import i18next from 'i18next';
-import arTranslation from './../src/locales/ar/translation.json';
-import enTranslation from './../src/locales/en/translation.json';
+import i18n from './i18n';
 import { useSelector } from 'react-redux';
 import { selectLanguage } from './store/slices/language';
-import Ads from './pages/advertisements/advertisements';
-import Products from './pages/products/products';
-import PrdDetials from './pages/products/PrdDetials';
-import Profile from './pages/users/Profile';
-import CategorySubscription from './pages/category_subscription/CategorySubscription';
-import Admins from './pages/admins/Admins';
-import Unauthorized from './pages/unauthorized/Unauthorized';
 import ProtectedRoute from './components/guards/ProtectedRoute';
-import MainSettings from './pages/settings/MainSettings';
-import { store } from './store/store';
-import ProductsMain from './pages/products/ProductsMain';
-import ProductsSubscription from './pages/products/ProductsSubscription';
-import MainCategories from './pages/categories/MainCategories';
-import SubscriptionsCat from './pages/categories/SubscriptionsCat';
-import CategoriesMap from './pages/categories/CategoriesMap';
-import Charts from './pages/home/home';
-import Home from './pages/home';
-import verifaction_requestByStatus from './pages/verifaction_request/verifaction_requestByStatus';
-import ChatReport from './pages/Reports/ChatReport';
-import ProductReport from './pages/Reports/ProductReport';
-import Inquiries from './pages/contactUs/Inquiries';
-import Issues from './pages/contactUs/Issues';
-import Suggestions from './pages/contactUs/Suggestions';
-import BanUserList from './pages/BankList/BanUserList';
-import BanProdList from './pages/BankList/BanProdList';
-import BanChatsList from './pages/BankList/BanChatsList';
-import UserChats from './pages/chats/UserChats';
-import SingleChat from './pages/chats/SingleChat';
-import Notfound from './pages/notfound/Notfound';
-import ErrorElement from './pages/errorElement/ErrorElement';
 import LogoutGuards from './components/guards/LogoutGuards';
-import AddAdmin from './pages/admins/AddAdmin';
-import AdminProfile from './pages/admins/AdminProfile';
-import activeUsers from './pages/users/activeCustomers';
-import unactiveUsers from './pages/users/unactiveCustomers';
-import lazyUsers from './pages/users/lazyCustomers';
-import activeCustomers from './pages/users/activeCustomers';
-import unactiveCustomers from './pages/users/unactiveCustomers';
-import lazyCustomers from './pages/users/lazyCustomers';
-import activeAdvertiser from './pages/users/activeAdvertiser';
-import unactiveAdvertiser from './pages/users/unactiveAdvertiser';
-import lazyAdvertiser from './pages/users/lazyAdvertiser';
-const storedPermissions: any = store.getState().permissions.permissions;
+
+// Lazy-loaded pages
+const Users = lazy(() => import('./pages/users/users'));
+const Advertiser = lazy(() => import('./pages/users/advertiser'));
+const Customer = lazy(() => import('./pages/users/Customer'));
+const SignIn = lazy(() => import('./pages/Authentication/SignIn'));
+const LandingHome = lazy(() => import('./pages/landing/LandingHome'));
+const AboutUs = lazy(() => import('./pages/landing/AboutUs'));
+const HowToDeleteAccount = lazy(() => import('./pages/landing/HowToDeleteAccount'));
+const PrivacyPolicy = lazy(() => import('./pages/landing/PrivacyPolicy'));
+const Ads = lazy(() => import('./pages/advertisements/advertisements'));
+const Products = lazy(() => import('./pages/products/products'));
+const PrdDetials = lazy(() => import('./pages/products/PrdDetials'));
+const Profile = lazy(() => import('./pages/users/Profile'));
+const CategorySubscription = lazy(() => import('./pages/category_subscription/CategorySubscription'));
+const Admins = lazy(() => import('./pages/admins/Admins'));
+const Unauthorized = lazy(() => import('./pages/unauthorized/Unauthorized'));
+const MainSettings = lazy(() => import('./pages/settings/MainSettings'));
+const ProductsMain = lazy(() => import('./pages/products/ProductsMain'));
+const ProductsSubscription = lazy(() => import('./pages/products/ProductsSubscription'));
+const MainCategories = lazy(() => import('./pages/categories/MainCategories'));
+const SubscriptionsCat = lazy(() => import('./pages/categories/SubscriptionsCat'));
+const CategoriesMap = lazy(() => import('./pages/categories/CategoriesMap'));
+const Charts = lazy(() => import('./pages/home/home'));
+const Home = lazy(() => import('./pages/home'));
+const verifaction_requestByStatus = lazy(() => import('./pages/verifaction_request/verifaction_requestByStatus'));
+const ChatReport = lazy(() => import('./pages/Reports/ChatReport'));
+const ProductReport = lazy(() => import('./pages/Reports/ProductReport'));
+const Inquiries = lazy(() => import('./pages/contactUs/Inquiries'));
+const Issues = lazy(() => import('./pages/contactUs/Issues'));
+const Suggestions = lazy(() => import('./pages/contactUs/Suggestions'));
+const BanUserList = lazy(() => import('./pages/BankList/BanUserList'));
+const BanProdList = lazy(() => import('./pages/BankList/BanProdList'));
+const BanChatsList = lazy(() => import('./pages/BankList/BanChatsList'));
+const UserChats = lazy(() => import('./pages/chats/UserChats'));
+const SingleChat = lazy(() => import('./pages/chats/SingleChat'));
+const Notfound = lazy(() => import('./pages/notfound/Notfound'));
+const ErrorElement = lazy(() => import('./pages/errorElement/ErrorElement'));
+const AddAdmin = lazy(() => import('./pages/admins/AddAdmin'));
+const AdminProfile = lazy(() => import('./pages/admins/AdminProfile'));
+const activeCustomers = lazy(() => import('./pages/users/activeCustomers'));
+const unactiveCustomers = lazy(() => import('./pages/users/unactiveCustomers'));
+const lazyCustomers = lazy(() => import('./pages/users/lazyCustomers'));
+const activeAdvertiser = lazy(() => import('./pages/users/activeAdvertiser'));
+const unactiveAdvertiser = lazy(() => import('./pages/users/unactiveAdvertiser'));
+const lazyAdvertiser = lazy(() => import('./pages/users/lazyAdvertiser'));
+
+const RouteSuspense = ({ children }: { children: ReactNode }) => (
+  <Suspense fallback={<Loader />}>{children}</Suspense>
+);
+
 const router = createHashRouter([
   {
     path: '/',
     element: <LandingLayout />,
     children: [
-      { index: true, element: <LandingHome /> },
-      { path: 'about-us', element: <AboutUs /> },
-      { path: 'how-to-delete-account', element: <HowToDeleteAccount /> },
-      { path: 'privacy-policy', element: <PrivacyPolicy /> },
+      { index: true, element: <RouteSuspense><LandingHome /></RouteSuspense> },
+      { path: 'about-us', element: <RouteSuspense><AboutUs /></RouteSuspense> },
+      { path: 'how-to-delete-account', element: <RouteSuspense><HowToDeleteAccount /></RouteSuspense> },
+      { path: 'privacy-policy', element: <RouteSuspense><PrivacyPolicy /></RouteSuspense> },
     ],
   },
   {
@@ -80,11 +80,13 @@ const router = createHashRouter([
       {
         path: 'auth/login',
         element: (
-          <LogoutGuards>
-            <SignIn />
-          </LogoutGuards>
+          <RouteSuspense>
+            <LogoutGuards>
+              <SignIn />
+            </LogoutGuards>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
     ],
   },
@@ -99,499 +101,561 @@ const router = createHashRouter([
       {
         index: true,
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={Home}
-              hasPermission={storedPermissions[1]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={Home}
+                permissionIndex={1}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'charts',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={Charts}
-              hasPermission={storedPermissions[7]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={Charts}
+                permissionIndex={7}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'users',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={Users}
-              hasPermission={storedPermissions[7]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={Users}
+                permissionIndex={7}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'profile/:id',
         element: (
-          <Guard>
-            <Profile />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <Profile />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'users/customer',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={Customer}
-              hasPermission={storedPermissions[9]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={Customer}
+                permissionIndex={9}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'activeCustomers',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={activeCustomers}
-              hasPermission={storedPermissions[8]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={activeCustomers}
+                permissionIndex={8}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'unactiveCustomers',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={unactiveCustomers}
-              hasPermission={storedPermissions[9]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={unactiveCustomers}
+                permissionIndex={9}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'lazyCustomers',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={lazyCustomers}
-              hasPermission={storedPermissions[9]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={lazyCustomers}
+                permissionIndex={9}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
-
       {
         path: 'activeAdvertiser',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={activeAdvertiser}
-              hasPermission={storedPermissions[8]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={activeAdvertiser}
+                permissionIndex={8}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'unactiveAdvertiser',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={unactiveAdvertiser}
-              hasPermission={storedPermissions[9]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={unactiveAdvertiser}
+                permissionIndex={9}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'lazyAdvertiser',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={lazyAdvertiser}
-              hasPermission={storedPermissions[9]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={lazyAdvertiser}
+                permissionIndex={9}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'users/advertiser',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={Advertiser}
-              hasPermission={storedPermissions[9]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={Advertiser}
+                permissionIndex={9}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'ads',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={Ads}
-              hasPermission={storedPermissions[4]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={Ads}
+                permissionIndex={4}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: '/part/subscription',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={CategorySubscription}
-              hasPermission={storedPermissions[13]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={CategorySubscription}
+                permissionIndex={13}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: '/confirm/subscription',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={verifaction_requestByStatus}
-              hasPermission={storedPermissions[13]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={verifaction_requestByStatus}
+                permissionIndex={13}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'products',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={Products}
-              hasPermission={storedPermissions[5]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={Products}
+                permissionIndex={5}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'products/main',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={ProductsMain}
-              hasPermission={storedPermissions[5]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={ProductsMain}
+                permissionIndex={5}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'products/subscriptions',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={ProductsSubscription}
-              hasPermission={storedPermissions[5]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={ProductsSubscription}
+                permissionIndex={5}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
-        path: 'products',
-        element: (
-          <Guard>
-            <Products />
-          </Guard>
-        ),
-        errorElement: <ErrorElement />,
-      },
-      {
-        // Make the path relative, as it's nested under 'products'
         path: '/products/:id',
         element: (
-          <Guard>
-            <PrdDetials />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <PrdDetials />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'admins',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={Admins}
-              hasPermission={storedPermissions[2]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={Admins}
+                permissionIndex={2}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'admins/profile/:adminId',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={AdminProfile}
-              hasPermission={storedPermissions[2]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={AdminProfile}
+                permissionIndex={2}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'admins/edit-admin/:adminId',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={AddAdmin}
-              hasPermission={storedPermissions[2]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={AddAdmin}
+                permissionIndex={2}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'settings',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={MainSettings}
-              hasPermission={storedPermissions[3]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={MainSettings}
+                permissionIndex={3}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'categories/main',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={MainCategories}
-              hasPermission={storedPermissions[10]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={MainCategories}
+                permissionIndex={10}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'categories/subscriptions',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={SubscriptionsCat}
-              hasPermission={storedPermissions[11]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={SubscriptionsCat}
+                permissionIndex={11}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'categories/map',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={CategoriesMap}
-              hasPermission={storedPermissions[12]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={CategoriesMap}
+                permissionIndex={12}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'contact-us/inquiries',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={Inquiries}
-              hasPermission={storedPermissions[15]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={Inquiries}
+                permissionIndex={15}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'contact-us/issues',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={Issues}
-              hasPermission={storedPermissions[16]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={Issues}
+                permissionIndex={16}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'contact-us/suggestions',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={Suggestions}
-              hasPermission={storedPermissions[17]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={Suggestions}
+                permissionIndex={17}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'reports',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={Products}
-              hasPermission={storedPermissions[5]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={Products}
+                permissionIndex={5}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'reports/product',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={ProductReport}
-              hasPermission={storedPermissions[5]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={ProductReport}
+                permissionIndex={5}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'reports/chat',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={ChatReport}
-              hasPermission={storedPermissions[5]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={ChatReport}
+                permissionIndex={5}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'reports/chat/search/:rc_search',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={ChatReport}
-              hasPermission={storedPermissions[5]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={ChatReport}
+                permissionIndex={5}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'reports/chats/:userId',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={UserChats}
-              hasPermission={storedPermissions[5]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={UserChats}
+                permissionIndex={5}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'reports/chat/:chatId',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={SingleChat}
-              hasPermission={storedPermissions[5]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={SingleChat}
+                permissionIndex={5}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'Ban/users',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={BanUserList}
-              hasPermission={storedPermissions[5]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={BanUserList}
+                permissionIndex={5}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'Ban/chats',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={BanChatsList}
-              hasPermission={storedPermissions[5]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={BanChatsList}
+                permissionIndex={5}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
       {
         path: 'Ban/products',
         element: (
-          <Guard>
-            <ProtectedRoute
-              component={BanProdList}
-              hasPermission={storedPermissions[5]}
-            />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <ProtectedRoute
+                component={BanProdList}
+                permissionIndex={5}
+              />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
-
       {
         path: 'unauthorized',
         element: (
-          <Guard>
-            <Unauthorized />
-          </Guard>
+          <RouteSuspense>
+            <Guard>
+              <Unauthorized />
+            </Guard>
+          </RouteSuspense>
         ),
-        errorElement: <ErrorElement />,
+        errorElement: <RouteSuspense><ErrorElement /></RouteSuspense>,
       },
     ],
   },
-  { path: '*', element: <Notfound /> },
+  { path: '*', element: <RouteSuspense><Notfound /></RouteSuspense> },
 ]);
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const language = useSelector(selectLanguage);
-  i18next.init({
-    interpolation: { escapeValue: false },
-    lng: language,
-    resources: {
-      ar: { translation: arTranslation },
-      en: { translation: enTranslation },
-    },
-  });
+
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    i18n.changeLanguage(language);
+  }, [language]);
 
   return loading ? (
     <Loader />
   ) : (
-    <I18nextProvider i18n={i18next}>
+    <I18nextProvider i18n={i18n}>
       <div
         dir={language === 'ar' ? 'rtl' : 'ltr'}
         className="bg-primaryBG-light dark:bg-primaryBG-dark text-text-light dark:text-text-dark"

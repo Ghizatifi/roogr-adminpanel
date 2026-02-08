@@ -2,7 +2,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLanguage, setLanguage } from '../store/slices/language';
-import i18n from '../i18next';
+import i18n from '../i18n';
 
 const navLinks = [
   { to: '/', labelKey: 'landing.nav.home' },

@@ -10,7 +10,7 @@ export default function Notfound() {
         {t('notfound.title')}
       </h1>
       <div className="flex justify-center">
-        <img src="./../../../404error.png" alt="" width={600} />
+        <img src={`${import.meta.env.BASE_URL}404error.png`} alt={t('notfound.title')} width={600} />
       </div>
     </div>
   );

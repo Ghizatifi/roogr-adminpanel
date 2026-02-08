@@ -3,7 +3,7 @@ import { store } from '../store/store';
 import { setLogout } from '../store/slices/auth';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://roogr.sa/api/v1/admin',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://roogr.sa/api/v1/admin',
 });
 
 axiosInstance.interceptors.request.use(

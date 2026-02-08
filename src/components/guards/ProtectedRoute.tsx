@@ -1,21 +1,25 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { checkPermissions } from '../../store/slices/permissions';
 
 interface ProtectedRouteProps {
     component: React.ComponentType<any>;
-    hasPermission: number;
+    permissionIndex: number;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     component: Component,
-    hasPermission,
+    permissionIndex,
     ...rest
 }) => {
-    if (hasPermission=1) {
+    const permissions = useSelector(checkPermissions);
+    const value = permissions?.[permissionIndex];
+    const hasPermission = value === '1' || value === 1;
+    if (hasPermission) {
         return <Component {...rest}/>;
-    } else {
-        return <Navigate to="/unauthorized" />;
     }
+    return <Navigate to="/unauthorized" />;
 };
 
 export default ProtectedRoute;

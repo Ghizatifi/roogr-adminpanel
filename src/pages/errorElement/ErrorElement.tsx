@@ -6,7 +6,7 @@ export default function ErrorElement() {
         <div>
             <h1 className={`text-center md:mt-10 text-lg md:text-2xl font-bold`}>{t('errorElement.title')}</h1>
             <div className="flex justify-center">
-                <img src="./../../../500Internal.png" alt="" width={500} />
+                <img src={`${import.meta.env.BASE_URL}500Internal.png`} alt={t('errorElement.title')} width={500} />
             </div>
         </div>
     )
