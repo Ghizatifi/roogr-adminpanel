@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
 import { useNavigate } from 'react-router-dom';
 import useHandleAction from '../../hooks/useHandleAction';
 import NotFoundSection from '../../components/Notfound/NotfoundSection';
@@ -9,6 +8,7 @@ import AccordionHeader2 from '../../components/Accordion/AccordionHeader2';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import useBanUser from '../../hooks/users/useBanUser';
 import useBannedUsers from '../../hooks/Ban/UserBanList';
+import PageLoader from '../../common/PageLoader';
 
 const BannedIconSrc = '/whiteblock.png';
 const EditIconSrc = '/Edit.svg';
@@ -33,8 +33,24 @@ const BanUserList: React.FC = () => {
     navigate(`/profile/${adminId}`);
   };
 
-  if (bannedUsersLoading) return <p>Loading...</p>;
-  if (bannedUsersError) return <p>Error: {bannedUsersError}</p>;
+  if (bannedUsersLoading) {
+    return (
+      <PageLoader
+        pageName={t('BanList.users.label')}
+        breadcrumbLinks={breadcrumbLinks}
+      />
+    );
+  }
+  if (bannedUsersError) {
+    return (
+      <div className="space-y-4">
+        <Breadcrumb pageName={t('BanList.users.label')} breadcrumbLinks={breadcrumbLinks} />
+        <div className="rounded-xl border border-stroke bg-white p-8 text-center dark:border-strokedark dark:bg-boxdark">
+          <p className="text-body dark:text-bodydark">{bannedUsersError}</p>
+        </div>
+      </div>
+    );
+  }
 
   const userlogs = bannedUsers.map((user) => ({
     id: user.customer_id,
@@ -174,7 +190,7 @@ const BanUserList: React.FC = () => {
     <>
       <Breadcrumb
         breadcrumbLinks={breadcrumbLinks}
-        pageName={t('BanList.users.pageName')}
+        pageName={t('BanList.users.label')}
       />
       <AccordionHeader2
         titles={[t('BanList.Ban'), t('BanList.unBan')]}

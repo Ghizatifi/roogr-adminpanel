@@ -9,6 +9,7 @@ import MainTable from '../../components/lastnews/MainTable';
 import useBannedChats from '../../hooks/Ban/BanChatList';
 import useUnBanChat from '../../hooks/Ban/UnBanChat';
 import useHandleAction from '../../hooks/useHandleAction';
+import PageLoader from '../../common/PageLoader';
 
 const BannedIconSrc = '/whiteblock.png';
 const EditIconSrc = '/Edit.svg';
@@ -36,8 +37,24 @@ const BanListType: React.FC = () => {
     navigate(`/chat/${chatId}`);
   };
 
-  if (bannedChatsLoading) return <p>Loading...</p>;
-  if (bannedChatsError) return <p>Error: {bannedChatsError}</p>;
+  if (bannedChatsLoading) {
+    return (
+      <PageLoader
+        pageName={t('BanList.chats.label')}
+        breadcrumbLinks={breadcrumbLinks}
+      />
+    );
+  }
+  if (bannedChatsError) {
+    return (
+      <div className="space-y-4">
+        <Breadcrumb pageName={t('BanList.chats.label')} breadcrumbLinks={breadcrumbLinks} />
+        <div className="rounded-xl border border-stroke bg-white p-8 text-center dark:border-strokedark dark:bg-boxdark">
+          <p className="text-body dark:text-bodydark">{bannedChatsError}</p>
+        </div>
+      </div>
+    );
+  }
 
   const Chatlogs = bannedChats.map((chat) => ({
     id: chat.id,

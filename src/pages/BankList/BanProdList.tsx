@@ -9,6 +9,7 @@ import AccordionHeader2 from '../../components/Accordion/AccordionHeader2';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import useBanProduct from '../../hooks/products/useBanProduct';
 import useBannedProducts from './../../hooks/Ban/ProdBanList';
+import PageLoader from '../../common/PageLoader';
 
 const BannedIconSrc = '/whiteblock.png';
 
@@ -37,8 +38,24 @@ const BanProdList: React.FC = () => {
     navigate(`/products/${prodId}`);
   };
 
-  // if (bannedProdsLoading) return <p>Loading...</p>;
-  // if (bannedProdsError) return <p>Error: {bannedProdsError}</p>;
+  if (bannedProdsLoading) {
+    return (
+      <PageLoader
+        pageName={t('BanList.products.label')}
+        breadcrumbLinks={breadcrumbLinks}
+      />
+    );
+  }
+  if (bannedProdsError) {
+    return (
+      <div className="space-y-4">
+        <Breadcrumb pageName={t('BanList.products.label')} breadcrumbLinks={breadcrumbLinks} />
+        <div className="rounded-xl border border-stroke bg-white p-8 text-center dark:border-strokedark dark:bg-boxdark">
+          <p className="text-body dark:text-bodydark">{bannedProdsError}</p>
+        </div>
+      </div>
+    );
+  }
   const handleActionCallback = () => {
     refreshBannedProds();
   };

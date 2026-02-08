@@ -166,28 +166,28 @@ const SubscriptionsCat: React.FC = () => {
               {subscriptionscategories.map((cat, index) => (
                 <Draggable key={cat.parent_id} draggableId={`table-${cat.parent_id}`} index={index}>
                   {(provided) => (
-                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                      <table className="w-full text-[20px] text-left rtl:text-right mb-7">
+                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="min-w-0 overflow-x-auto">
+                      <table className="w-full min-w-[320px] text-[20px] text-left rtl:text-right mb-7">
                         <thead className="bg-[#EDEDED] dark:bg-[#3E3E46]">
                           <tr className="px-2 py-2 text-[18px] font-[400]">
                             <th
                               scope="col"
-                              className="px-2 py-3 text-[18px] font-[400] rounded-s-lg"
+                              className="w-14 sm:w-20 shrink-0 px-2 py-3 text-[18px] font-[400] rounded-s-lg"
                             >
-                              {t('categoriesPage.order')}
+                              {cat.parent_sort_order}
                             </th>
-                            <th scope="col" className="px-6 py-3">
-                              <img src={cat.parent_image} width={100} alt="" />
+                            <th scope="col" className="w-20 sm:w-28 shrink-0 px-2 sm:px-6 py-3">
+                              <img src={cat.parent_image} width={100} alt="" className="max-w-full h-auto" />
                             </th>
                             <th
                               scope="col"
-                              className="px-6 py-3 text-[18px] font-[400]"
+                              className="px-2 sm:px-6 py-3 text-[18px] font-[400] min-w-0 break-words"
                             >
                               {cat.category_name}
                             </th>
                             <th
                               scope="col"
-                              className="py-3"
+                              className="w-12 sm:w-14 shrink-0 py-3"
                               onClick={() => openModal('AddSub', cat)}
                             >
                               <CgAddR
@@ -197,7 +197,7 @@ const SubscriptionsCat: React.FC = () => {
                             </th>
                             <th
                               scope="col"
-                              className="py-3"
+                              className="w-12 sm:w-14 shrink-0 py-3"
                               onClick={() => openModal('EditParent', cat)}
                             >
                               <LiaEditSolid
@@ -207,7 +207,7 @@ const SubscriptionsCat: React.FC = () => {
                             </th>
                             <th
                               scope="col"
-                              className=" py-3"
+                              className="w-12 sm:w-14 shrink-0 py-3"
                               onClick={() => openModal('DeleteParent', cat)}
                               role="button"
                             >
@@ -215,7 +215,7 @@ const SubscriptionsCat: React.FC = () => {
                             </th>
                             <th
                               scope="col"
-                              className=" py-3 rounded-e-lg"
+                              className="w-12 sm:w-14 shrink-0 py-3 rounded-e-lg"
                               role="button"
                               onClick={() => toggleSubcategories(cat.parent_id)}
                             >
@@ -251,16 +251,16 @@ const SubscriptionsCat: React.FC = () => {
                                               : ''
                                             }`}
                                         >
-                                          <td className="px-2 py-4 font-[400] text-[17px]">
-                                            #{index + 1}
+                                          <td className="w-14 sm:w-20 shrink-0 px-2 py-4 font-[400] text-[17px]">
+                                            #{sub.parent_sort_order}
                                           </td>
-                                          <td className="px-2 py-4"></td>
-                                          <td className="px-6 py-4 font-[400] text-[17px] text-gray-900 whitespace-nowrap dark:text-white">
+                                          <td className="w-20 sm:w-28 shrink-0 px-2 sm:px-6 py-4"></td>
+                                          <td className="px-2 sm:px-6 py-4 font-[400] text-[17px] text-gray-900 min-w-0 break-words dark:text-white">
                                             {sub.category_name}
                                           </td>
-                                          <td className="px-2 py-4"></td>
+                                          <td className="w-12 sm:w-14 shrink-0 px-2 py-4"></td>
                                           <td
-                                            className="py-4"
+                                            className="w-12 sm:w-14 shrink-0 py-4"
                                             onClick={() => openModal('EditSub', sub)}
                                           >
                                             <FiEdit3
@@ -269,7 +269,7 @@ const SubscriptionsCat: React.FC = () => {
                                             />
                                           </td>
                                           <td
-                                            className="py-4"
+                                            className="w-12 sm:w-14 shrink-0 py-4"
                                             onClick={() => openModal('DeleteSub', sub)}
                                           >
                                             <RiDeleteBin6Line
@@ -277,7 +277,7 @@ const SubscriptionsCat: React.FC = () => {
                                               role="button"
                                             />
                                           </td>
-                                          <td className="py-4"></td>
+                                          <td className="w-12 sm:w-14 shrink-0 py-4"></td>
                                         </tr>
                                       )}
                                     </Draggable>

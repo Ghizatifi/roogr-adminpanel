@@ -21,6 +21,7 @@ import { useLocation } from 'react-router-dom';
 import categoryPopup from './categoryPopup';
 import CategoryPopup from './categoryPopup';
 import DeletePopup from '../../components/popups/DeletePopup';
+import PageLoader from '../../common/PageLoader';
 
 const ApprovedSubscription = '/true.png';
 const EditIconSrc = '/Edit.svg';
@@ -70,7 +71,7 @@ const CategorySubscription = () => {
     fetchUsersCount();
   }, [Count, status]);
   const totalPages = Math.ceil(categorySubscriptionCount);
-  const { data, refreshRequest } = useCategorySubscriptionsByStatus(
+  const { data, loading, error, refreshRequest } = useCategorySubscriptionsByStatus(
     status,
     currentPage,
     id,
@@ -90,9 +91,24 @@ const CategorySubscription = () => {
   const display = () => {
     refreshRequest();
   };
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error}</p>;
-  //
+  if (loading) {
+    return (
+      <PageLoader
+        pageName={t('verification_request.label.label')}
+        breadcrumbLinks={breadcrumbLinks}
+      />
+    );
+  }
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <Breadcrumb pageName={t('verification_request.label.label')} breadcrumbLinks={breadcrumbLinks} />
+        <div className="rounded-xl border border-stroke bg-white p-8 text-center dark:border-strokedark dark:bg-boxdark">
+          <p className="text-body dark:text-bodydark">{error}</p>
+        </div>
+      </div>
+    );
+  }
   const headers = [
     {
       key: 'id',

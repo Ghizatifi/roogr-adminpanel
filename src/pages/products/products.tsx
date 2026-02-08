@@ -11,6 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import useDeleteProducts from '../../hooks/products/DelProducts';
 import useAllProducts from '../../hooks/products/useAllProducts';
 import useBanProduct from '../../hooks/products/useBanProduct';
+import PageLoader from '../../common/PageLoader';
 
 const NotBannedIconSrc = '/unblock.svg';
 const BannedIconSrc = '/block.svg';
@@ -22,7 +23,7 @@ const Products: React.FC = () => {
   const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState(0);
-  const { products, refreshProducts } = useAllProducts(currentPage);
+  const { products, loading, error, refreshProducts } = useAllProducts(currentPage);
   const { banProduct, loadingPrdBan } = useBanProduct();
   const { handleAction, loading: actionLoading } = useHandleAction();
   const {
@@ -50,9 +51,25 @@ const Products: React.FC = () => {
   }, [isSuccess, refreshProducts]);
   const totalPages = Math.ceil(productsCount);
 
-  // Handle loading and error states for fetching products
-  // if (loading) return <p>Loading products...</p>;
-  // if (error) return <p>Error fetching products: {error}</p>;
+  const breadcrumbLinks = [{ label: t('sidebar.ads.ads'), path: '/products' }];
+  if (loading) {
+    return (
+      <PageLoader
+        pageName={t('products.label.label')}
+        breadcrumbLinks={breadcrumbLinks}
+      />
+    );
+  }
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <Breadcrumb pageName={t('products.label.label')} breadcrumbLinks={breadcrumbLinks} />
+        <div className="rounded-xl border border-stroke bg-white p-8 text-center dark:border-strokedark dark:bg-boxdark">
+          <p className="text-body dark:text-bodydark">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleEditClick = (productId: number) => {
     navigate(`/products/${productId}`);
@@ -227,8 +244,6 @@ const Products: React.FC = () => {
       className: 'text-center flex justify-center',
     },
   ];
-
-  const breadcrumbLinks = [{ label: t('products.label.label'), path: '/' }];
 
   return (
     <>

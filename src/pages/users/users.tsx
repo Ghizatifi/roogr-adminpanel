@@ -8,6 +8,7 @@ import axiosInstance from '../../axiosConfig/instanc';
 import Pagination from '../../components/pagination/Pagination';
 import { useTranslation } from 'react-i18next';
 import useBanUser from '../../hooks/users/useBanUser';
+import PageLoader from '../../common/PageLoader';
 
 const BannedIconSrc = '/block.svg';
 const NotBannedIconSrc = '/unblock.svg';
@@ -23,7 +24,7 @@ const Users: React.FC = () => {
   const [usersCount, setUsersCount] = useState(0);
   const location = useLocation();
   const { userName } = location.state || {};
-  const { users, refreshUsers } = useUsers(currentPage, userName);
+  const { users, loading, error, refreshUsers } = useUsers(currentPage, userName);
   const { handleAction, loading: actionLoading } = useHandleAction();
   useEffect(() => {
     const fetchUsersCount = async () => {
@@ -48,9 +49,27 @@ const Users: React.FC = () => {
       refreshUsers();
     }
   }, [isSuccess, refreshUsers]);
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error}</p>;
-  //
+
+  const breadcrumbLinks = [{ label: t('users.label.label'), path: '/' }];
+  if (loading) {
+    return (
+      <PageLoader
+        pageName={t('users.label.allusers')}
+        breadcrumbLinks={breadcrumbLinks}
+      />
+    );
+  }
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <Breadcrumb pageName={t('users.label.allusers')} breadcrumbLinks={breadcrumbLinks} />
+        <div className="rounded-xl border border-stroke bg-white p-8 text-center dark:border-strokedark dark:bg-boxdark">
+          <p className="text-body dark:text-bodydark">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   const handleClickName = (userId: number) => {
     navigate(`/profile/${userId}`);
   };
@@ -180,7 +199,6 @@ const Users: React.FC = () => {
     },
   ];
 
-  const breadcrumbLinks = [{ label: t('users.label.label'), path: '/' }];
   return (
     <div>
       <Breadcrumb

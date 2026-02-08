@@ -5,17 +5,33 @@ import { useTranslation } from 'react-i18next';
 import useBanProduct from '../../hooks/products/useBanProduct';
 import useHandleAction from '../../hooks/useHandleAction';
 import useProduct from '../../hooks/products/useGetProduct';
+import PageLoader from '../../common/PageLoader';
 
 const NotBannedIconSrc = '/whiteblock.png';
 const BannedIconSrc = '/block.svg';
 const PrdDetials: React.FC = () => {
   const { t } = useTranslation();
-  const { product, refreshProduct } = useProduct();
-  console.log(product);
+  const { product, loading: productLoading, error, refreshProduct } = useProduct();
+  const breadcrumbLinks = [{ label: t('ProdDetials.label.label'), path: '/products' }];
 
-  // if (loading) return <p>Loading product...</p>;
-  // if (error) return <p>Error loading product: {error}</p>;
-  const breadcrumbLinks = [{ label: t('ProdDetials.label.label'), path: '/' }];
+  if (productLoading) {
+    return (
+      <PageLoader
+        pageName={t('ProdDetials.label.pageName')}
+        breadcrumbLinks={breadcrumbLinks}
+      />
+    );
+  }
+  if (error || !product) {
+    return (
+      <div className="space-y-4">
+        <Breadcrumb pageName={t('ProdDetials.label.pageName')} breadcrumbLinks={breadcrumbLinks} />
+        <div className="rounded-xl border border-stroke bg-white p-8 text-center dark:border-strokedark dark:bg-boxdark">
+          <p className="text-body dark:text-bodydark">{error || 'Product not found'}</p>
+        </div>
+      </div>
+    );
+  }
   const { banProduct, isSuccess } = useBanProduct();
   const { handleAction, loading } = useHandleAction();
   const handleBan = (productId: number, isBanned: boolean) => {

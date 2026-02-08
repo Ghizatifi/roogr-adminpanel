@@ -1,14 +1,36 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import useAllAds from '../../hooks/useAllAds';
 import MainTable from '../../components/lastnews/MainTable';
-const NotBannedIconSrc = './../../../public/unblock.svg';
-const EditIconSrc = './../../../public/Edit.svg';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import PageLoader from '../../common/PageLoader';
+
+const NotBannedIconSrc = '/unblock.svg';
+const EditIconSrc = '/Edit.svg';
 
 const Ads: React.FC = () => {
+  const { t } = useTranslation();
   const { ads, loading, error } = useAllAds();
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  const breadcrumbLinks = [{ label: t('sidebar.ads.ads'), path: '/ads' }];
+  if (loading) {
+    return (
+      <PageLoader
+        pageName={t('sidebar.ads.ads')}
+        breadcrumbLinks={breadcrumbLinks}
+      />
+    );
+  }
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <Breadcrumb pageName={t('sidebar.ads.ads')} breadcrumbLinks={breadcrumbLinks} />
+        <div className="rounded-xl border border-stroke bg-white p-8 text-center dark:border-strokedark dark:bg-boxdark">
+          <p className="text-body dark:text-bodydark">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   // Transform the ads data to fit the format that MainTable expects
   const logs = ads.map((ad) => {
@@ -97,7 +119,12 @@ const Ads: React.FC = () => {
     },
     { key: 'BanStatus', content: 'الحالة', className: 'text-center' },
   ];
-  return <MainTable logs={logs} headers={headers} />;
+  return (
+    <div className="space-y-4">
+      <Breadcrumb pageName={t('sidebar.ads.ads')} breadcrumbLinks={breadcrumbLinks} />
+      <MainTable logs={logs} headers={headers} />
+    </div>
+  );
 };
 
 export default Ads;
