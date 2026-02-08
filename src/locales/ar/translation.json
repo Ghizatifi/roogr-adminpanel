@@ -148,6 +148,9 @@
   },
   "admins": {
     "title": "صفحة الإدأريين",
+    "profileTitle": "ملف المسؤول",
+    "profileNotFound": "المسؤول غير موجود",
+    "backToList": "العودة إلى القائمة",
     "title-add": "تحرير الصفحة",
     "label": "الإدأرة",
     "edit": "تحرير",

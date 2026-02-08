@@ -87,7 +87,7 @@ const AdminsList: React.FC = () => {
   };
 
   const handleClickName = (adminId: number) => {
-    navigate(`/profile/${adminId}`);
+    navigate(`/admins/profile/${adminId}`);
   };
   const getRefreshFunction = () => {
     switch (adminType) {

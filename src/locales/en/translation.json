@@ -148,6 +148,9 @@
   },
   "admins": {
     "title": "Administrators",
+    "profileTitle": "Admin profile",
+    "profileNotFound": "Admin not found",
+    "backToList": "Back to list",
     "title-add": "Edit page",
     "label": "Administrators",
     "edit": "Edit",

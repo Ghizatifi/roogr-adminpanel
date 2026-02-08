@@ -46,6 +46,7 @@ import Notfound from './pages/notfound/Notfound';
 import ErrorElement from './pages/errorElement/ErrorElement';
 import LogoutGuards from './components/guards/LogoutGuards';
 import AddAdmin from './pages/admins/AddAdmin';
+import AdminProfile from './pages/admins/AdminProfile';
 import activeUsers from './pages/users/activeCustomers';
 import unactiveUsers from './pages/users/unactiveCustomers';
 import lazyUsers from './pages/users/lazyCustomers';
@@ -319,6 +320,18 @@ const router = createHashRouter([
           <Guard>
             <ProtectedRoute
               component={Admins}
+              hasPermission={storedPermissions[2]}
+            />
+          </Guard>
+        ),
+        errorElement: <ErrorElement />,
+      },
+      {
+        path: 'admins/profile/:adminId',
+        element: (
+          <Guard>
+            <ProtectedRoute
+              component={AdminProfile}
               hasPermission={storedPermissions[2]}
             />
           </Guard>
