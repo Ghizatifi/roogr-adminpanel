@@ -27,10 +27,15 @@ const SignIn: React.FC = () => {
       setSubmitting(true);
       const res = await axiosInstance.post(`/login`, values);
       dispatch(setPermissions(res.data.data.permissions));
+      const data = res.data.data || {};
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('email', res.data.data.email);
-      localStorage.setItem('first_name', res.data.data.first_name);
-      localStorage.setItem('last_name', res.data.data.last_name);
+      localStorage.setItem('email', data.email || '');
+      localStorage.setItem('first_name', data.first_name || '');
+      localStorage.setItem('last_name', data.last_name || '');
+      const adminId = data.id ?? data.admin_id ?? data.user_id;
+      if (adminId != null) {
+        localStorage.setItem('admin_id', String(adminId));
+      }
       dispatch(setIsLoggedin());
       navigate(POST_LOGIN_REDIRECT, { replace: true });
     } catch (error: any) {

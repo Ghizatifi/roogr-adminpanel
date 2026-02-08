@@ -9,15 +9,16 @@ const DarkModeSwitcher = () => {
 
   return (
     <div className="flex items-center gap-2 2xsm:gap-4">
-    <Link to={`/`}>
-            <img
-              src={colorMode === 'light' ? logoLight : logoDark}
-              width={100}
-              height={100}
-              alt="logo"
-            />
-          </Link>
-    <li role="button" className={`relative m-0 block h-7.5 w-14`}>
+      <Link to="/charts" className="flex shrink-0 items-center transition-opacity hover:opacity-90">
+        <img
+          src={colorMode === 'light' ? logoLight : logoDark}
+          width={120}
+          height={40}
+          alt="Logo"
+          className="h-8 w-auto object-contain md:h-9"
+        />
+      </Link>
+      <li role="button" className="relative m-0 flex h-9 w-14 shrink-0 items-center">
       <span
         onClick={() => {
           if (typeof setColorMode === 'function') {
@@ -34,7 +35,7 @@ const DarkModeSwitcher = () => {
           <img src={sun} alt="light mode" />
         </span>
       </span>
-    </li>
+      </li>
     </div>
   );
 };

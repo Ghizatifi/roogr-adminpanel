@@ -179,7 +179,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
       <aside
         ref={sidebar}
         className={`app-sidebar flex h-screen shrink-0 flex-col bg-boxdark duration-300 ease-in-out
-          ${isOpen ? 'w-[min(100vw,20rem)] sm:w-80' : 'w-0'}
+          ${isOpen ? 'w-[min(100vw,22rem)] sm:w-[17rem]' : 'w-0'}
           absolute left-0 top-0 z-9999 rtl:left-auto rtl:right-0 shadow-xl
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full'}
           ${!isOpen ? 'sidebar-collapsed' : ''}`}
@@ -199,8 +199,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
           <button
             type="button"
             aria-label={isOpen ? 'Réduire le menu' : 'Agrandir le menu'}
-            className={`absolute top-[1vh] z-50 rounded-[10px] bg-sidebarHover p-2 text-white transition-all duration-300 hover:opacity-90
-              ${isOpen ? 'ltr:left-[11rem] rtl:right-[11rem]' : 'ltr:left-6 rtl:right-6'}
+            className={`absolute top-[1vh] z-50 rounded-[10px] bg-sidebarHover p-2 text-white transition-all duration-300 hover:opacity-90 dark:bg-sidebarHover
+              ${isOpen ? 'ltr:left-[14.5rem] rtl:right-[14.5rem]' : 'ltr:left-6 rtl:right-6'}
               hidden md:block rtl:rotate-180`}
             onClick={toggleSidebar}
           >
@@ -208,7 +208,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
           </button>
           {isOpen && (
             <div className="flex flex-1 justify-center md:justify-start">
-              <Link to="/" className="max-w-[10rem] truncate text-lg font-[400] text-[#70F1EB] sm:max-w-[12rem] sm:text-xl md:text-2xl">
+              <Link to="/charts" className="max-w-[10rem] truncate text-lg font-[400] text-[#70F1EB] sm:max-w-[12rem] sm:text-xl md:text-2xl">
                 {fName}
               </Link>
             </div>
@@ -241,7 +241,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       <AiFillHome className="text-2xl shrink-0" />
                       {isOpen && (
                         <>
-                          <span className="flex-1">{t('sidebar.ads.ads')}</span>
+                          <span className="sidebar-menu-text flex-1">{t('sidebar.ads.ads')}</span>
                           <FaChevronDown
                             className={`shrink-0 text-sm transition-transform duration-200 ${
                               dropdownList === 'Ads' && open ? 'rotate-180' : ''
@@ -279,7 +279,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       <PiUsersFill className="text-2xl shrink-0" />
                       {isOpen && (
                         <>
-                          <span className="flex-1">{t('sidebar.users.users')}</span>
+                          <span className="sidebar-menu-text flex-1">{t('sidebar.users.users')}</span>
                           <FaChevronDown className={`shrink-0 text-sm transition-transform duration-200 ${dropdownList === 'User' && open ? 'rotate-180' : ''}`} />
                         </>
                       )}
@@ -307,7 +307,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       <BiSolidCategory className="text-2xl shrink-0" />
                       {isOpen && (
                         <>
-                          <span className="flex-1">{t('sidebar.categories.categories')}</span>
+                          <span className="sidebar-menu-text flex-1">{t('sidebar.categories.categories')}</span>
                           <FaChevronDown className={`shrink-0 text-sm transition-transform duration-200 ${dropdownList === 'Categories' && open ? 'rotate-180' : ''}`} />
                         </>
                       )}
@@ -334,7 +334,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       <PiTicketFill className="text-2xl shrink-0" />
                       {isOpen && (
                         <>
-                          <span className="flex-1">{t('sidebar.requests.requests')}</span>
+                          <span className="sidebar-menu-text flex-1">{t('sidebar.requests.requests')}</span>
                           <FaChevronDown className={`shrink-0 text-sm transition-transform duration-200 ${dropdownList === 'Subscription' && open ? 'rotate-180' : ''}`} />
                         </>
                       )}
@@ -361,7 +361,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       <PiHeadsetFill className="text-2xl shrink-0" />
                       {isOpen && (
                         <>
-                          <span className="flex-1">{t('sidebar.support.support')}</span>
+                          <span className="sidebar-menu-text flex-1">{t('sidebar.support.support')}</span>
                           <FaChevronDown className={`shrink-0 text-sm transition-transform duration-200 ${dropdownList === 'Support' && open ? 'rotate-180' : ''}`} />
                         </>
                       )}
@@ -388,7 +388,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       <PiEnvelopeFill className="text-2xl shrink-0" />
                       {isOpen && (
                         <>
-                          <span className="flex-1">{t('sidebar.reports.reports')}</span>
+                          <span className="sidebar-menu-text flex-1">{t('sidebar.reports.reports')}</span>
                           <FaChevronDown className={`shrink-0 text-sm transition-transform duration-200 ${dropdownList === 'Reports' && open ? 'rotate-180' : ''}`} />
                         </>
                       )}
@@ -414,7 +414,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       <MdOutlineBlock className="text-2xl shrink-0" />
                       {isOpen && (
                         <>
-                          <span className="flex-1">{t('sidebar.ban-list.ban-list')}</span>
+                          <span className="sidebar-menu-text flex-1">{t('sidebar.ban-list.ban-list')}</span>
                           <FaChevronDown className={`shrink-0 text-sm transition-transform duration-200 ${dropdownList === 'BanList' && open ? 'rotate-180' : ''}`} />
                         </>
                       )}

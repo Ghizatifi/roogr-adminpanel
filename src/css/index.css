@@ -151,14 +151,19 @@ input::placeholder {
   }
 }
 
-/* Sidebar visible sur desktop (≥768px) - force visibilité si conflit Tailwind */
+/* Sidebar visible sur desktop (≥768px) - largeur augmentée pour éviter retour à la ligne */
 @media (min-width: 768px) {
   .app-sidebar {
     position: static !important;
     transform: none !important;
-    width: 13.75rem !important; /* 220px */
-    min-width: 13.75rem !important;
+    width: 17rem !important; /* 272px - plus large pour textes longs */
+    min-width: 17rem !important;
     box-shadow: none;
+  }
+  .app-sidebar .sidebar-menu-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .app-sidebar.sidebar-collapsed {
     width: 5.5rem !important; /* 88px */

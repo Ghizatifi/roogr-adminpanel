@@ -30,7 +30,7 @@ export default function SidebarLink({
         }
       >
         <span className="shrink-0">{icon}</span>
-        {isOpen && <span className="min-w-0 truncate">{t(text)}</span>}
+        {isOpen && <span className="sidebar-menu-text min-w-0 flex-1 truncate">{t(text)}</span>}
       </NavLink>
     </li>
   );

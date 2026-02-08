@@ -17,12 +17,13 @@ export const isLoggedinSlice = createSlice({
         },
         setLogout: (state) => {
           localStorage.removeItem("isLoggedin");
-          localStorage.removeItem('token')
-          localStorage.removeItem('email')
-          localStorage.removeItem('first_name')
-          localStorage.removeItem('permissions')
-          localStorage.removeItem('last_name')
-          state.isLoggedin = false
+          localStorage.removeItem('token');
+          localStorage.removeItem('email');
+          localStorage.removeItem('first_name');
+          localStorage.removeItem('last_name');
+          localStorage.removeItem('permissions');
+          localStorage.removeItem('admin_id');
+          state.isLoggedin = false;
         }
     }
 })
