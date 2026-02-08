@@ -1,5 +1,4 @@
-import React from 'react';
-import Accordion from '../Accordion/Accordion';
+import React, { useState } from 'react';
 import UserForm from './UserFormDetials';
 import UserProducts from './products/UserProducts';
 import UserInfo from './Info/UserInfo';
@@ -18,12 +17,22 @@ import { User } from '../../types/user';
 import UserProductReport from '../reports/UserProductReport';
 import UserChatReport from '../reports/UserChatReport';
 
+type ProfileTabId =
+  | 'details'
+  | 'info'
+  | 'products'
+  | 'ticket'
+  | 'chats'
+  | 'contact'
+  | 'reports'
+  | 'banlist';
+
 interface ProfileAccordionProps {
   user: User;
   loading: boolean;
   error: string | null;
 }
-//
+
 const ProfileAccordion: React.FC<ProfileAccordionProps> = ({
   user,
   loading,
@@ -32,48 +41,72 @@ const ProfileAccordion: React.FC<ProfileAccordionProps> = ({
   const { id } = useParams();
   const chats = useDisplayUserChats(id);
   const { t } = useTranslation();
-  const displayChats = () => {
-    return chats;
-  };
+  const [activeTab, setActiveTab] = useState<ProfileTabId>('details');
+
+  const displayChats = () => chats;
+
+  const tabs: { id: ProfileTabId; label: string }[] = [
+    { id: 'details', label: t('profile.detials') },
+    { id: 'info', label: t('profile.info') },
+    { id: 'products', label: t('profile.products') },
+    { id: 'ticket', label: t('profile.ticket') },
+    { id: 'chats', label: t('profile.chats') },
+    { id: 'contact', label: t('profile.contactUs') },
+    { id: 'reports', label: t('profile.reprts') },
+    { id: 'banlist', label: t('profile.banList') },
+  ];
+
   return (
-    <div className="">
-      {/*  */}
-      <Accordion title={t('profile.detials')}>
-        {/* {loading && <p>Loading...</p>}
-        {error && <p>Error: {error}</p>} */}
-        {user && <UserForm user={user} loading={loading} error={error} />}
-      </Accordion>
-
-      {/*  */}
-      <Accordion title={t('profile.info')}>
-        <UserInfo user={user} />
-      </Accordion>
-
-      {/*  */}
-      <Accordion title={t('profile.products')}>
-        <UserProducts user={user} />
-      </Accordion>
-
-      {/*  */}
-      <Accordion title={t('profile.ticket')}>
-        <CategorySubscriptionUserid />
-
-        <VerifactionRequestByUserid />
-      </Accordion>
-
-      {/*  */}
-      <Accordion title={t('profile.chats')}>
-        {chats.length == 0 ? (
-          <NotFoundSection data={chats} />
-        ) : (
-          <>
-            <div
-              className={`bg-secondaryBG dark:bg-secondaryBG-dark  rounded-md mt-4`}
+    <div className="rounded-xl border border-stroke bg-white shadow-sm dark:border-strokedark dark:bg-boxdark">
+      {/* Tabs */}
+      <div className="border-b border-stroke dark:border-strokedark">
+        <nav
+          className="flex gap-0 overflow-x-auto px-2 sm:px-4"
+          aria-label="Profile sections"
+        >
+          {tabs.map(({ id: tabId, label }) => (
+            <button
+              key={tabId}
+              type="button"
+              onClick={() => setActiveTab(tabId)}
+              className={`shrink-0 border-b-2 px-4 py-3 text-sm font-medium transition-colors whitespace-nowrap ${
+                activeTab === tabId
+                  ? 'border-primary text-primary dark:border-[#70F1EB] dark:text-[#70F1EB]'
+                  : 'border-transparent text-body hover:text-black dark:text-bodydark dark:hover:text-white'
+              }`}
             >
+              {label}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Panel */}
+      <div className="min-h-[200px] p-4 sm:p-5">
+        {activeTab === 'details' && (
+          user && <UserForm user={user} loading={loading} error={error} />
+        )}
+
+        {activeTab === 'info' && <UserInfo user={user} />}
+
+        {activeTab === 'products' && <UserProducts user={user} />}
+
+        {activeTab === 'ticket' && (
+          <>
+            <CategorySubscriptionUserid />
+            <VerifactionRequestByUserid />
+          </>
+        )}
+
+        {activeTab === 'chats' && (
+          chats.length === 0 ? (
+            <NotFoundSection data={chats} />
+          ) : (
+            <div className="mt-2 rounded-lg bg-secondaryBG dark:bg-secondaryBG-dark">
               {chats.map((chat) => (
                 <Chat
-                  chat={chat}
                   key={chat.id}
+                  chat={chat}
                   displayChats={displayChats}
                   length={chats.length}
                   userId={id}
@@ -81,45 +114,47 @@ const ProfileAccordion: React.FC<ProfileAccordionProps> = ({
                 />
               ))}
             </div>
-          </>
+          )
         )}
-      </Accordion>
 
-      {/*  */}
-      <Accordion title={t('profile.contactUs')}>
-        <AccordionContacUs
-          idPre="RQ1-"
-          id={id}
-          pageName="contact-us.inquiries"
-          type="inquiry"
-        />
-        <AccordionContacUs
-          idPre="RQ2-"
-          id={id}
-          pageName="contact-us.issues"
-          type="issue"
-        />
-        <AccordionContacUs
-          idPre="RFP-"
-          id={id}
-          pageName="contact-us.suggestions"
-          type="suggestion"
-        />
-      </Accordion>
+        {activeTab === 'contact' && (
+          <div className="space-y-4">
+            <AccordionContacUs
+              idPre="RQ1-"
+              id={id}
+              pageName="contact-us.inquiries"
+              type="inquiry"
+            />
+            <AccordionContacUs
+              idPre="RQ2-"
+              id={id}
+              pageName="contact-us.issues"
+              type="issue"
+            />
+            <AccordionContacUs
+              idPre="RFP-"
+              id={id}
+              pageName="contact-us.suggestions"
+              type="suggestion"
+            />
+          </div>
+        )}
 
-      {/*  */}
-      <Accordion title={t('profile.reprts')}>
-        <UserProductReport user={user} />
+        {activeTab === 'reports' && (
+          <div className="space-y-4">
+            <UserProductReport user={user} />
+            <UserChatReport user={user} />
+          </div>
+        )}
 
-        <UserChatReport user={user} />
-      </Accordion>
-
-      {/* */}
-      <Accordion title={t('profile.banList')}>
-        <BanProfileList user={user} />
-        <UserBanProdList />
-        <UserChatBanList user={user} />
-      </Accordion>
+        {activeTab === 'banlist' && (
+          <div className="space-y-4">
+            <BanProfileList user={user} />
+            <UserBanProdList />
+            <UserChatBanList user={user} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

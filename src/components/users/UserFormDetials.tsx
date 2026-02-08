@@ -96,8 +96,8 @@ const UserForm: React.FC<ProfileAccordionProps> = ({
   // }
 
   return (
-    <div className="my-3 flex justify-center flex-col gap-10 bg-secondaryBG-light dark:bg-secondaryBG-dark p-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-y-10">
+    <div className="rounded-lg bg-secondaryBG-light dark:bg-secondaryBG-dark p-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <ReusableInput
           label={t('profile.userDetials.id')}
           type="text"
@@ -210,14 +210,16 @@ const UserForm: React.FC<ProfileAccordionProps> = ({
           extraClass="bg-Input-red text-Input-TextRed w-40"
         />
       </div>
-      {/* <div className="bg-SaveIconBg rounded-md w-35 flex justify-center self-center">
-        <img
-          src={SaveIconSrc}
-          className="w-8 h-8 text-center p-1 cursor-pointer"
+      <div className="mt-4 flex justify-end">
+        <button
+          type="button"
           onClick={handleEditClick}
-          alt="Save Icon"
-        />
-      </div> */}
+          disabled={editLoading}
+          className="rounded-lg bg-SaveIconBg px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
+        >
+          {editLoading ? t('profile.saving') || 'Saving…' : t('profile.save') || 'Save'}
+        </button>
+      </div>
     </div>
   );
 };

@@ -110,7 +110,13 @@
     "search": "Type to search..."
   },
   "profile": {
-    "detials": "Detials",
+    "pageName": "Profile",
+    "actions": "Actions",
+    "save": "Save",
+    "saving": "Saving…",
+    "overview": "Overview",
+    "banReason": "Ban reason",
+    "detials": "Details",
     "info": "Information",
     "products": "Products",
     "banList": "Ban List",
@@ -456,6 +462,7 @@
   },
   "lastNews": {
     "title": "Last News",
+    "subtitle": "Latest login, register and profile updates",
     "lastLogin": "Has Logged In",
     "register": "New Account",
     "edit": "Acocount updated"
@@ -467,7 +474,13 @@
     "customer": "Customer",
     "advertiser": "Advertiser",
     "customers": "Number of customers",
-    "advertisers": "Number of advertisers"
+    "advertisers": "Number of advertisers",
+    "dashboard": "Dashboard",
+    "subtitle": "Overview of users and latest activity.",
+    "loading": "Loading...",
+    "noData": "No data available",
+    "totalUsers": "Total users",
+    "activeRate": "Active rate"
   },
   "BanList": {
     "Ban": "Ban",

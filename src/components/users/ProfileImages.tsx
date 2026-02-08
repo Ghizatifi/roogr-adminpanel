@@ -1,4 +1,3 @@
-// ProfileImages.tsx
 import React from 'react';
 import CoverOne from '/BG.png';
 import userSix from '/Defualt.png';
@@ -8,36 +7,46 @@ interface ProfileImagesProps {
     image?: string;
     cover?: string;
   };
+  /** Compact: small avatar only, no big cover. Default true for admin profile. */
+  compact?: boolean;
 }
 
-const ProfileImages: React.FC<ProfileImagesProps> = ({ user }) => {
-  return (
-    <>
-      {/* Cover Image */}
-      <div className="relative z-20 h-35 md:h-65">
+const ProfileImages: React.FC<ProfileImagesProps> = ({ user, compact = true }) => {
+  const imgSrc =
+    user?.image === 'https://roogr.sa/api/image/'
+      ? userSix
+      : user?.image || userSix;
+  const coverSrc =
+    user?.cover === 'https://roogr.sa/api/image/'
+      ? CoverOne
+      : user?.cover || CoverOne;
+
+  if (compact) {
+    return (
+      <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-gray/20 shadow dark:border-strokedark dark:bg-meta-4/30">
         <img
-          src={
-            user?.cover === 'https://roogr.sa/api/image/'
-              ? CoverOne
-              : user?.cover || CoverOne
-          }
-          className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
-          alt="profile cover"
+          src={imgSrc}
+          className="h-full w-full object-cover"
+          alt=""
+          aria-hidden
         />
       </div>
+    );
+  }
 
-      {/* Profile Image */}
-      <div className="px-4 text-center">
-        <div className="relative z-30 mx-auto -mt-22 h-32 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur">
-          <img
-            src={
-              user?.image === 'https://roogr.sa/api/image/'
-                ? userSix
-                : user?.image || userSix
-            }
-            className="rounded-full h-30 w-30 text-center"
-            alt="profile"
-          />
+  return (
+    <>
+      <div className="relative z-20 h-20 overflow-hidden rounded-t-xl">
+        <img
+          src={coverSrc}
+          className="h-full w-full object-cover object-center"
+          alt=""
+          aria-hidden
+        />
+      </div>
+      <div className="px-4">
+        <div className="relative z-30 -mt-10 mx-auto h-20 w-20 overflow-hidden rounded-full border-2 border-white bg-white shadow dark:border-strokedark dark:bg-boxdark">
+          <img src={imgSrc} className="h-full w-full object-cover" alt="" aria-hidden />
         </div>
       </div>
     </>
