@@ -1,0 +1,530 @@
+{
+  "yes": "نعم",
+  "no": "لا",
+  "cancel": "إلغاء",
+  "Successfully": "بنجاح",
+  "failed": "فشل ",
+  "error": "خطأ غير معروف",
+  "NotData": "لا يوجد محتوي لعرضه",
+  "toast": {
+    "error": "حدث خطأ غير متوقع",
+    "deleted": "تم الحذف بنجاح",
+    "updated": "تم التعديل بنجاح "
+  },
+  "Tickectpopup": {
+    "title": " تحرير تذكرة القسم",
+    "customername": "الاسم",
+    "verified_by": "بواسطة",
+    "verification_type": "الجهة",
+    "verification_type_number": "رقم الجهة",
+    "verification_type_image": "صورة الجهة",
+    "transaction_image": "صورة  التحويل"
+  },
+  "CategoryPopup": {
+    "id": "رقم التذكره",
+    "title": " تحرير تذكرة القسم",
+    "customername": "الاسم",
+    "verified_by": "بواسطة",
+    "date": "تاريخ التفعيل",
+    "transaction_image": "صورة  التحويل"
+  },
+  "VerificationType": {
+    "Identity": " وثيقة معروف ",
+    "Freelancer": "عمل حر",
+    "Commercial": "سجل تجاري"
+  },
+  "Ban": {
+    "Ban": "حظر",
+    "unBan": "رفع الحظر",
+    "unBanmessageTitle": "تأكيد رفع الحظر",
+    "BanmessageTitle": "تأكيد  الحظر",
+    "unBanmessageText": "هل أنت متأكد من أنك تريد إلغاء حظر ",
+    "BanmessageText": "هل أنت متأكد من أنك تريد  حظر ",
+    "confirmUnBanButtonText": "رفع الحظر",
+    "confirmBanButtonText": "حظر",
+    "reason": "أدخل سبب الحظر/إلغاء الحظر هنا...",
+    "Banned": "تم الحظر",
+    "unBaned": "تم رفع الحظر"
+  },
+  "remove": {
+    "remove": "حذف",
+    "RemovemessageTitle": "تأكيد الحذف",
+    "messageText": "هل أنت متأكد من أنك تريد  حذف الهوية",
+    "removed": "تم الحذف"
+  },
+  "sidebar": {
+    "charts": "الرسوم البيانية",
+    "ads": {
+      "ads": "الأعلانات",
+      "all": "الكل",
+      "main": "رئيسية",
+      "subscriptions": "الاشتراك"
+    },
+    "users": {
+      "users": "المستخدمين",
+      "all": "الكل",
+      "advertisers": "المعلنين",
+      "customers": "الزبائن"
+    },
+    "categories": {
+      "categories": "الأقسام",
+      "main": "رئيسية",
+      "subscriptions": "الاشتراك",
+      "map": "الخريطة"
+    },
+    "requests": {
+      "requests": "تذاكر الاشتراك",
+      "attestation": "توثيق",
+      "category": "قسم"
+    },
+    "support": {
+      "support": "تواصل معنا",
+      "inquiries": "استفسارات",
+      "issues": "شكاوي",
+      "suggestions": "اقتراحات"
+    },
+    "reports": {
+      "reports": "البلاغات",
+      "chat": "المحادثات",
+      "product": "المنتجات"
+    },
+    "ban-list": {
+      "ban-list": "المحظورين",
+      "users": "المستخدمين",
+      "products": "المنتجات",
+      "chats": "المحادثات"
+    },
+    "admins": "الإدارة",
+    "settings": "الإعدادات",
+    "sign-out": "تسجيل الخروج"
+  },
+  "login": {
+    "login": "تسجيل الدخول",
+    "name": "أسم المستخدم/البريد الالكتروني",
+    "password": "كلمة المرور",
+    "go": "الدخول",
+    "name-error": "",
+    "password-error": ""
+  },
+  "header": {
+    "search": "إضغط / للبحث ..."
+  },
+  "profile": {
+    "detials": "البيانات",
+    "info": "المعلومات",
+    "products": "الاعلانات",
+    "banList": "قائمة الحظر",
+    "contactUs": "تواصل معنا",
+    "ticket": "تذاكر الاشتراك",
+    "chats": "المحادثات",
+    "reprts": "البلاغات",
+    "userDetials": {
+      "id": "رقم الهويه",
+      "name": "أسم المستخدم",
+      "alias": "اسم المستعار",
+      "type": "الفئه",
+      "email": "البريد الالكتروني",
+      "phone": "الهاتف",
+      "country": "البلد",
+      "regDate": "تاريخ التسجيل",
+      "mobileconfirm": "تفعيل الهاتف",
+      "emailleconfirm": "تفعيل البريد ",
+      "Activated": "مفعل",
+      "Deactivated": " غير مفعل",
+      "customer": "زبون",
+      "advertiser": "معلن"
+    },
+    "UserInfo": {
+      "follower": "المتابعين",
+      "rates": "التقييم",
+      "bio": "نبذة"
+    }
+  },
+  "admins": {
+    "title": "صفحة الإدأريين",
+    "title-add": "تحرير الصفحة",
+    "label": "الإدأرة",
+    "edit": "تحرير",
+    "add": "إضافة جديدة",
+    "form": {
+      "placeholder": "الرجاء الكتابة",
+      "level": "نوع الإدارة",
+      "select-type": "حدد نوع الادارة",
+      "delegate": "ناائب",
+      "observer": "مراقب",
+      "supervisor": "مشرف",
+      "name": "الأسم الأول",
+      "userName": "اسم المستخدم",
+      "levelError": "الرجاء اختيار مستوى المشرف",
+      "nameError": "الرجاء إدخال اسم المشرف",
+      "userNameError": "الرجاء إدخال اسم المستخدم المسؤول",
+      "emailError": "الرجاء إدخال البريد الإلكتروني المشرف",
+      "permissionsError": "الرجاء اختيار أذونات المسؤول",
+      "PasswordError": "الرجاء إدخال كلمة مرور المسؤول",
+      "phoneError": "الرجاء إدخال رقم هاتف المسؤول",
+      "email": "البريد الالكتروني",
+      "Password": "كلمة المرور",
+      "phone": "رقم الجوال",
+      "shift": "توقيت العمل",
+      "from": "من",
+      "to": "الي",
+      "select-time": "حدد الوقت",
+      "permissions": "الصلاحيات",
+      "super": "سوبر",
+      "admins": "الاداريين",
+      "settings": "الاعدادات",
+      "charts": "الرسم البياني",
+      "advertisments": "الإعلانات",
+      "all": "الكل",
+      "primary": "الرئيسية",
+      "subscription": "إشتراك",
+      "users": "المستخدمين",
+      "advertisers": "المعلنين",
+      "customers": "الزبائن",
+      "categories": "الاقسام",
+      "region": "المنطقة",
+      "requests": "تذاكر الاشتراك",
+      "attestation": "توثيق",
+      "category": "قسم",
+      "support": "الدعم",
+      "inquiries": "الاستفسارات",
+      "issues": "الشكاوي",
+      "suggestions": "الاقتراحات",
+      "reports": "البلاغات",
+      "chats": "المحادثات",
+      "products": "المنتجات",
+      "banlist": "قائمة الحظر"
+    },
+    "supervisor": "مشرف",
+    "delegate": "نائب",
+    "observer": "مراقب",
+    "adminList": {
+      "id": "رقم الهويه",
+      "name": "الأسم",
+      "email": "البريد الالكتروني",
+      "phone": "الهاتف",
+      "status": "النشاط",
+      "dateAdded": "تم الاضافه",
+      "lastLogin": "موعد التسجيل",
+      "finish_working_hour": "وقت الخروج",
+      "start_working_hour": "وقت الدخول",
+      "edit": "تحرير",
+      "BanStatus": "الحالة"
+    }
+  },
+  "users": {
+    "label": {
+      "label": "المستخدمين",
+      "allusers": "الكل",
+      "customer": "الزبائن",
+      "advertiser": "المعلنين"
+    },
+    "id": "ID",
+    "name": "أسم المستخدم",
+    "alias": "اسم المستعار",
+    "type": "الفئه",
+    "regDate": "تاريخ التسجيل",
+    "mobileconfirm": "رقم الجوال",
+    "emailleconfirm": "البريد الالكتروني",
+    "BanStatus": "الحالة"
+  },
+  "ProdDetials": {
+    "label": {
+      "label": "الاعلانات",
+      "pageName": "تحرير"
+    },
+    "form": {
+      "id": "رقم الإعلان",
+      "category": "القسم",
+      "AdsName": "اسم الإعلان",
+      "price": "السعر",
+      "status": "حالة الإعلان",
+      "description": "الوصف",
+      "image": "الصور",
+      "video": "الفيديو",
+      "NoImage": "لا يوجد صور",
+      "NoVideo": "لا يوجد فيديوهات"
+    }
+  },
+  "products": {
+    "label": {
+      "label": "المنتجات",
+      "pageNameUnPaid": "رئيسية",
+      "pageNamePaid": "الاشتراك",
+      "pageNameAll": "الكل"
+    },
+    "id": "رقم الاعلان",
+    "name": " أسم المعلن",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "category": "القسم",
+    "ProdName": "أسم الاعلان",
+    "photo": "الصورة",
+    "Edit": "تحرير",
+    "BanStatus": "الحالة"
+  },
+  "unauthorized": {
+    "title": "غير مصرح لك",
+    "discribution": "ليس لديك إذن للوصول إلى هذه الصفحة."
+  },
+  "notfound": {
+    "title": "الصفحة غير موجودة",
+    "user": "المستخدم غير موجود"
+  },
+  "errorElement": {
+    "title": "عذرا، لدينا بعض الأخطاء يرجى المحاولة مرة أخرى في وقت لاحق"
+  },
+  "settings": {
+    "terms": "الشروط والاحكام",
+    "comission": "العمولة",
+    "banks": "البنوك",
+    "sms": "الرسائل",
+    "verification": "الرسوم",
+    "banners": "الاعلانات التجارية",
+    "settings": "الإعدادات",
+    "comissionError": "",
+    "commercial": "رسوم السجل التجاري",
+    "maroof": "رسوم وثيقة 'معروف'",
+    "self-employment": "رسوم وثيقة العمل الحر",
+    "subscription": "رسوم اقسام الاشتراك",
+    "verification-check-fees": "رسوم علامة مضمون",
+    "usernameSms": "اسم المستخدم",
+    "senderNameSms": "اسم المرسل",
+    "tokenSms": "الرمز(Token)",
+    "accountHolder": "اسم صاحب الحساب",
+    "bankName": "اسم البنك",
+    "accountNumber": "رقم الحساب",
+    "bankIBAN": "ايبان",
+    "bankLogo": "شعار البنك",
+    "edit": "تحرير",
+    "bannerName": "اسم الاعلان",
+    "bannerurl": "رابط الموقع",
+    "duration": "المدة",
+    "bannerImage": "شعار الاعلان",
+    "other": "أخرى",
+    "appStatus": "حالة التطبيق",
+    "inquiries": "الاستفسارات",
+    "issues": "الشكاوي",
+    "suggestions": "الاقتراحات",
+    "Alerts": "التنبيهات"
+  },
+  "categoriesPage": {
+    "title": "الأقسام",
+    "save": "حفظ",
+    "cancle": "الغاء",
+    "newCat": "قسم جديد",
+    "editCat": "تحرير القسم",
+    "order": "الترتيب",
+    "edit": "تحرير",
+    "categoriesToast": "تم تحديث الاقسام بنجاح.",
+    "catMain": {
+      "label": "رئيسية",
+      "catName": "اسم القسم",
+      "img": "الصورة"
+    },
+    "catSubscriptions": {
+      "label": "اشتراك",
+      "noSub": "لا يوجد اشتراك في هذا القسم"
+    },
+    "catMap": {
+      "label": "المناطق",
+      "regionName": "اسم المنطقة"
+    }
+  },
+  "popup": {
+    "delete_title": "هل أنت متأكد أنك تريد حذف",
+    "delete": "حذف",
+    "cancel": "الغاء",
+    "delete_toast": "تم الحذف بنجاح",
+    "add_toast": "تمت الإضافة بنجاح",
+    "edit_toast": "تم التعديل بنجاح",
+    "add_title": "قسم جديد",
+    "edit_title": "تحرير القسم",
+    "save": "حفظ",
+    "img": "الصورة",
+    "category_name": "اسم القسم"
+  },
+  "subscriptions": {
+    "titles": {
+      "processing": "طلب",
+      "approved": "فعال",
+      "rejected": "رفض",
+      "expired": "منتهي"
+    },
+    "headers": {
+      "id": "رقم التذكرة",
+      "category_name": " القسم الرئيسي ",
+      "sub_name": " القسم الفرعي ",
+      "transaction_image": "صورة التحويل",
+      "created_at": " تاريخ الطلب ",
+      "verification_period": "المده",
+      "verified_by_accept": "قبول",
+      "edit": "تحرير",
+      "verified_by_reject": "رفض"
+    }
+  },
+  "verification_request": {
+    "label": {
+      "label": "تذاكر الاشتراك",
+      "Part": "قسم",
+      "confirm": "توثيق"
+    },
+    "titles": {
+      "processing": "طلب",
+      "approved": "فعال",
+      "rejected": "رفض",
+      "expired": "منتهي"
+    },
+    "headers": {
+      "id": "رقم التذكرة",
+      "verification_type": "الجهة",
+      "verification_type_number": "رقم الجهة",
+      "verification_type_image": "صورة الجهة ",
+      "verification_required": "مضمون",
+      "transaction_image": " التحويل",
+      "created_at": " تاريخ الطلب ",
+      "verified_at": "التفعيل",
+      "By-admin": "بواسطة",
+      "verification_period": "المده",
+      "verified_by_accept": "قبول",
+      "verified_by_reject": "رفض",
+      "remove": "حذف"
+    }
+  },
+  "Reports": {
+    "label": {
+      "label": "البلاغات",
+      "product": "المنتجات",
+      "chat": "المحادثات",
+      "userChat": "محادثة",
+      "isMsg": "لا توجد رسائل في هذه الدردشة",
+      "banReason": "سبب حظر",
+      "banMassg": "تم حظر المستخدم بنجاح",
+      "unbanMassg": "تم إلغاء حظر المستخدم بنجاح"
+    },
+    "titles": {
+      "reports": "بلاغ",
+      "revision": "المراجعات"
+    },
+    "headers": {
+      "id": "رقم البلاغ",
+      "name": "بلاغ العميل",
+      "product": "المنتج",
+      "created_at": " تاريخ الطلب ",
+      "actions": "عرض",
+      "revision": "مراجعه",
+      "remove": "حذف",
+
+      "speakerTo": "المتحدث إلية"
+    }
+  },
+  "notifications": {
+    "popup": {
+      "add": "إضافة إشعار",
+      "expiry_date": "تاريخ الانتهاء",
+      "placeholderMessage": "أدخل رسالة الإشعار هنا",
+      "message": "رسالة الإشعار",
+      "placeholderTitle": "أدخل عنوان الإشعار هنا",
+      "title": "عنوان الإشعار",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "customers": "الزبائن",
+      "advertisers": "المعلنين",
+      "successfully": "تم إضافة الإشعار بنجاح",
+      "error": "خطأ أثناء الاضافه",
+      "Delegates": "النائبون",
+      "Observers": "المراقبون",
+      "Supervisors": "المشرفون"
+    }
+  },
+  "contact-us": {
+    "contact-us": "التواصل",
+    "inquiries": "الاستفسارات",
+    "issues": "الشكاوي",
+    "suggestions": "الاقتراحات",
+    "replied": "تم الرد",
+    "username": "اسم المستخدم",
+    "inquiryDate": "تاريخ الاستفسار",
+    "ticketNumber": "رقم التذكرة",
+    "view": "عرض",
+    "replyBy": "تم بواسطة",
+    "replyDate": "تاريخ الرد",
+    "closeTicket": "رد واغلاق",
+    "ticketDetails": "تفاصيل التذكرة",
+    "reply": "الرد",
+    "deleteTicket": "حذف التذكرة"
+  },
+
+  "lastNews": {
+    "title": "أخر الأحداث",
+    "lastLogin": "قام بتسجيل الدخول",
+    "register": "إنشاء حساب جديد",
+    "edit": "تم تعديل الحساب"
+  },
+  "charts": {
+    "Active": "نشط",
+    "Lazy": "كسول",
+    "Inactive": "غير نشط",
+    "customer": "زبون",
+    "advertiser": "معلن",
+
+    "customers": "عدد الزبائن",
+    "advertisers": "عدد المعلنين"
+  },
+  "BanList": {
+    "Ban": "حظر",
+    "unBan": "رفع الحظر",
+
+    "chats": {
+      "label": "المحظورين",
+      "pageName": "المحادثات",
+      "ChatId": "المحادثه",
+      "byAdmin": "تم بواسطة",
+      "banReason": "سبب الحظر",
+      "Date": "وقت الحظر",
+      "UnBanbyAdmin": "تم بواسطة",
+      "UnBanReason": "سبب  رفع الحظر",
+      "UnBanDate": "وقت رفع الحظر",
+      "show": "عرض",
+      "status": "الحالة"
+    },
+    "users": {
+      "label": "المحظورين",
+      "pageName": "المستخدمين",
+
+      "name": "أسم المستخدم",
+      "byAdmin": "تم بواسطة",
+      "banReason": "سبب الحظر",
+      "Date": "وقت الحظر",
+      "UnBanbyAdmin": "تم بواسطة",
+      "UnBanReason": "سبب  رفع الحظر",
+      "UnBanDate": "وقت رفع الحظر",
+      "show": "عرض",
+      "status": "الحالة"
+    },
+    "products": {
+      "label": "المحظورين",
+      "pageName": "الاعلانات",
+
+      "name": "اسم المنتج",
+      "byAdmin": "تم بواسطة",
+      "banReason": "سبب الحظر",
+      "Date": "وقت الحظر",
+      "UnBanbyAdmin": "تم بواسطة",
+      "UnBanReason": "سبب  رفع الحظر",
+      "UnBanDate": "وقت رفع الحظر",
+      "show": "عرض",
+      "status": "الحالة"
+    },
+    "charts": {
+      "Active": "نشط",
+      "Lazy": "كسول",
+      "Inactive": "غير نشط",
+      "customer": "زبون",
+      "advertiser": "معلن",
+      "customers": "عدد الزبائن",
+      "advertisers": "عدد المعلنين"
+    }
+  },
+  "alert": "يرجي ادخال صلاحيات الادمن كاملة اولا قبل اي حقل"
+}

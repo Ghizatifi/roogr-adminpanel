@@ -1,0 +1,25 @@
+{
+        "email":"super@sila.com",
+        "phone":"01111401111",
+        "username": "admin00000227",
+        "name": "admin2700000",
+        "password": "admin20000027@sila.com",
+        "type": "observer",
+        "workingHours": {
+            "start": "6",
+            "end": "11"
+        },
+        "permissions": {
+            "super": false,
+            "charts": false,
+            "admins": false,
+            "settings": false,
+            "ads": { "all": false, "primary": false, "subscription": false },
+            "users": { "all": false, "advertisers": false, "customers": false },
+            "categories": { "primary": false, "subscription": false, "region": false },
+            "requests": { "attestation": false, "category": false },
+            "contact": { "inquiries": false, "issues": false, "suggestions": false },
+            "reports": { "chats": false, "products": false },
+            "banlist": { "chats": false, "products": false }
+        }
+    }

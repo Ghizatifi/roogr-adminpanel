@@ -1,0 +1,167 @@
+@font-face {
+  font-family: 'Cairo';
+  src: url('/fonts/static/Cairo-Regular.ttf') format('truetype'); /* Correct format for TTF */
+  font-style: normal;
+  /* font-size: 10px; */
+}
+
+@font-face {
+  font-family: 'CairoBold';
+  src: url('/fonts/static/Cairo-Bold.ttf') format('truetype'); /* Correct format for TTF */
+  font-style: normal;
+}
+
+* {
+  font-family: 'Cairo', sans-serif;
+  /* font-size: medium !important; */
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #1e1e26;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #2e2d3d;
+}
+
+.bgColor {
+  background: #022e47;
+}
+
+.bg-darkColor {
+  background: #1e1e26 !important;
+}
+
+.bgActiveSidebar {
+  background: #2e2d3d;
+}
+
+.textColor {
+  color: #022e47;
+}
+
+.errorColor {
+  color: #e02828;
+}
+
+.borderColor {
+  border: 1px solid #022e47;
+}
+
+/* input{
+    background: #FAFAFF;
+    border: 3px solid #D6D4D4;
+
+} */
+
+input::placeholder {
+  font-size: 20px;
+  font-weight: 400;
+  color: #bfbfbf;
+}
+
+/* Container for custom radio */
+.custom-radio {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Hide the default radio button */
+.custom-radio input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.custom-radio .radiomark {
+  width: 21px;
+  height: 20px;
+  background-color: #fff;
+  border: solid 1px #dfdfdf;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+/* Create the green circle inside when selected */
+.custom-radio input:checked + .radiomark::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  width: 10px;
+  height: 10px;
+  background-color: #40c734;
+  border-radius: 50%;
+}
+
+/* Container for custom checkbox */
+.custom-checkbox {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Hide the default checkbox */
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.custom-checkbox .checkmark {
+  width: 21px;
+  height: 20px;
+  background-color: #fff;
+  border: solid 1px #dfdfdf;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+/* Create the green circle inside when checked */
+.custom-checkbox input:checked + .checkmark::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  width: 10px;
+  height: 10px;
+  background-color: #40c734;
+  border-radius: 50%;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Sidebar visible sur desktop (≥768px) - force visibilité si conflit Tailwind */
+@media (min-width: 768px) {
+  .app-sidebar {
+    position: static !important;
+    transform: none !important;
+    width: 13.75rem !important; /* 220px */
+    min-width: 13.75rem !important;
+    box-shadow: none;
+  }
+  .app-sidebar.sidebar-collapsed {
+    width: 5.5rem !important; /* 88px */
+    min-width: 5.5rem !important;
+  }
+}

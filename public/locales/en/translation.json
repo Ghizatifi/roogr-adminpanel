@@ -1,0 +1,545 @@
+{
+  "yes": "Yes",
+  "no": "No",
+  "cancel": "Cancel",
+  "Successfully": "Successfully",
+  "error": "Unknown error",
+  "failed": "Failed to",
+  "NotData": "Not Found Data yet",
+  "toast": {
+    "error": "An unknown error occurred",
+    "deleted": "successfully deleted",
+    "updated": "successfully updated"
+  },
+  "Tickectpopup": {
+    "title": "Edit memory partition",
+    "customername": "Customer Name",
+    "verified_by": "verified by ",
+    "verification_type": " Destination",
+    "verification_type_number": "Destination Num",
+    "verification_type_image": "Destination Image",
+    "transaction_image": "Transaction Image"
+  },
+  "CategoryPopup": {
+    "id": "ID",
+    "title": "Show Ticket partition",
+    "customername": "Customer Name",
+    "verified_by": "verified by ",
+    "date": "Date",
+    "transaction_image": "Transaction Image"
+  },
+  "VerificationType": {
+    "Identity": "Identity Document",
+    "Freelancer": "Freelancer Document",
+    "Commercial": "Commercial Register"
+  },
+  "Ban": {
+    "Ban": "Ban",
+    "unBan": "Un Ban",
+    "unBanmessageTitle": "Confirm Un Ban",
+    "BanmessageTitle": "Confirm Ban",
+    "unBanmessageText": "Are you sure you want to Un Ban this",
+    "BanmessageText": "Are you sure you want to Ban this ",
+    "confirmUnBanButtonText": "Un Ban",
+    "confirmBanButtonText": " Ban",
+    "reason": "Enter reason for ban/unban here...",
+    "Banned": "Banned",
+    "unBaned": "Unbaned"
+  },
+  "remove": {
+    "remove": "Remove",
+    "RemovemessageTitle": "Confirm Removal",
+    "messageText": "Are you sure you want to remove",
+    "removed": "Removed"
+  },
+  "sidebar": {
+    "charts": "Charts",
+    "ads": {
+      "ads": "Advertisements",
+      "all": "All",
+      "main": "Main",
+      "subscriptions": "Subscriptions"
+    },
+    "users": {
+      "users": "Users",
+      "all": "All",
+      "advertisers": "Advertisers",
+      "customers": "Customers"
+    },
+    "categories": {
+      "categories": "Categories",
+      "main": "Main",
+      "subscriptions": "Subscriptions",
+      "map": "Map"
+    },
+    "requests": {
+      "requests": "Requests",
+      "attestation": "Verification",
+      "category": "Category"
+    },
+    "support": {
+      "support": "Support",
+      "inquiries": "Inquiries",
+      "issues": "Issues",
+      "suggestions": "Suggestions"
+    },
+    "reports": {
+      "reports": "Reports",
+      "chat": "Chat",
+      "product": "Product"
+    },
+    "ban-list": {
+      "ban-list": "Ban list",
+      "users": "Users",
+      "products": "Products",
+      "chats": "Chats"
+    },
+    "admins": "admins",
+    "settings": "Settings",
+    "sign-out": "Sign out"
+  },
+  "login": {
+    "login": "Login",
+    "name": "Username/Email",
+    "password": "password",
+    "go": "Login",
+    "name-error": "Please enter your email or username",
+    "password-error": "Please enter your password"
+  },
+  "header": {
+    "search": "Type to search..."
+  },
+  "profile": {
+    "detials": "Detials",
+    "info": "Information",
+    "products": "Products",
+    "banList": "Ban List",
+    "contactUs": "Contact Us",
+    "ticket": "Tickets",
+    "chats": "chats",
+    "reprts": "Reprts",
+    "userDetials": {
+      "id": "ID",
+      "name": "User Name",
+      "alias": "Alias",
+      "type": "Type",
+      "email": "Email",
+      "phone": "Phone",
+      "country": "country",
+      "regDate": "Reg-Date",
+      "mobileconfirm": " Mobile Confirm",
+      "emailleconfirm": "Emaille Confirm",
+      "Activated": "Activated",
+      "Deactivated": "Deactivated ",
+      "customer": "customer",
+      "advertiser": "advertiser"
+    },
+    "UserInfo": {
+      "follower": "Followers",
+      "rates": "Rates",
+      "bio": "Bio"
+    }
+  },
+  "admins": {
+    "title": "Administrators",
+    "title-add": "Edit page",
+    "label": "Administrators",
+    "edit": "Edit",
+    "add": "Add New Admin",
+    "form": {
+      "placeholder": "please write",
+      "level": "Admin Level",
+      "select-type": "Select a type",
+      "delegate": "Delegate",
+      "observer": "Observer",
+      "supervisor": "Supervisor",
+      "name": "Name",
+      "userName": "Username",
+      "levelError": "please choose the admin level",
+      "nameError": "please enter admin name",
+      "userNameError": "please enter admin username",
+      "emailError": "please enter admin email",
+      "permissionsError": "please choose admin permissions",
+      "PasswordError": "please enter admin password",
+      "phoneError": "please enter admin phone number",
+      "email": "Email",
+      "Password": "Password",
+      "phone": "Phone No.",
+      "shift": "Shift Hours",
+      "from": "From",
+      "to": "To",
+      "select-time": "Select Time",
+      "permissions": "Permissions",
+      "super": "Super",
+      "admins": "Admins",
+      "settings": "Settings",
+      "charts": "charts",
+      "advertisments": "Advertisments",
+      "all": "All",
+      "primary": "Primary",
+      "subscription": "Subscription",
+      "users": "Users",
+      "advertisers": "Advertisers",
+      "customers": "Customers",
+      "categories": "Categories",
+      "region": "Region",
+      "requests": "Requests",
+      "attestation": "Attestation",
+      "category": "Category",
+      "support": "Support",
+      "inquiries": "Inquiries",
+      "issues": "Issues",
+      "suggestions": "Suggestions",
+      "reports": "Reports",
+      "chats": "Chats",
+      "products": "Products",
+      "banlist": "Banlist"
+    },
+    "supervisor": "supervisor",
+    "delegate": "delegate",
+    "observer": "observer",
+    "banned": "Banned",
+    "notBanned": "Not banned",
+    "adminList": {
+      "id": "ID",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Active",
+      "dateAdded": "Added At",
+      "lastLogin": "Last Login",
+      "finish_working_hour": "Logout At",
+      "start_working_hour": "Login At",
+      "edit": "Edit",
+      "BanStatus": "BanStatus"
+    }
+  },
+  "users": {
+    "label": {
+      "label": "Users",
+      "allusers": "All Users",
+      "customer": "Customers",
+      "advertiser": "Advertisers"
+    },
+    "id": "ID",
+    "name": "Name",
+    "alias": "Alias",
+    "type": "Type",
+    "regDate": "Reg-Date",
+    "mobileconfirm": "Mobile",
+    "emailleconfirm": "Email",
+    "BanStatus": "Ban Status",
+    "accountActivated": "Account activated",
+    "accountNotActivated": "Account not activated",
+    "emailActivated": "Email verified",
+    "emailNotActivated": "Email not verified",
+    "banned": "Banned",
+    "notBanned": "Not banned",
+    "banningUser": "Banning user"
+  },
+  "products": {
+    "label": {
+      "label": "Products",
+      "pageNameUnPaid": "UnPaid",
+      "pageNamePaid": "Paid",
+      "pageNameAll": "All"
+    },
+    "id": "ID",
+    "name": "Name",
+    "date": "Date",
+    "time": "Time",
+    "category": "Category",
+    "ProdName": "Product",
+    "photo": "Image",
+    "Edit": "Show",
+    "BanStatus": "Status"
+  },
+  "ProdDetials": {
+    "label": {
+      "label": "Ads",
+      "pageName": "show"
+    },
+    "form": {
+      "id": "ID",
+      "category": "Category",
+      "AdsName": "Ads Name",
+      "price": "Price",
+      "status": "Status",
+      "description": "Description",
+      "image": "Image",
+      "video": "Video",
+      "NoImage": "No images available",
+      "NoVideo": "No video available"
+    }
+  },
+  "unauthorized": {
+    "title": "sorry, You are not authorized",
+    "discribution": "You do not have permission to access this page."
+  },
+  "notfound": {
+    "title": "sorry, page not found",
+    "user": "sorry, user not found"
+  },
+  "errorElement": {
+    "title": "sorry, we have some error please try again later"
+  },
+  "settings": {
+    "terms": "Terms & Conditions",
+    "comission": "Comission",
+    "banks": "Banks",
+    "sms": "SMS",
+    "verification": "Verification",
+    "banners": "Commercial Banners",
+    "settings": "settings",
+    "comissionError": "comission is",
+    "commercial": "Commercial Regestry Fees",
+    "maroof": "'Maroof' Certificate Fees",
+    "self-employment": "Self-Employment Certificate Fees",
+    "subscription": "Subscription Category Fees",
+    "verification-check-fees": "Verification Check Fees",
+    "usernameSms": "Username",
+    "senderNameSms": "Sender Name",
+    "tokenSms": "Token",
+    "accountHolder": "Account Holder",
+    "bankName": "Bank name",
+    "accountNumber": "Account Number",
+    "bankIBAN": "IBAN",
+    "bankLogo": "Bank Logo",
+    "edit": "Edit",
+    "bannerName": "Banner Name",
+    "bannerurl": "Banner URL",
+    "duration": "Duration",
+    "bannerImage": "Bank Logo",
+    "other":"other",
+    "appStatus":"app Status",
+    "inquiries":"inquiries",
+    "issues":"issues",
+    "suggestions":"suggestions",
+    "Alerts":"Alerts"
+  },
+  "categoriesPage": {
+    "title": "categories",
+    "save": "Save",
+    "cancle": "Cancle",
+    "newCat": "NEW CATEGORY",
+    "editCat": "EDIT CATEGORY",
+    "order": "Order",
+    "edit": "Edit",
+    "categoriesToast": "Categories updated successfully.",
+    "countError": "Error loading count",
+    "fetchError": "Error loading data",
+    "orderError": "Error updating order",
+    "errorFetchingCount": "Error fetching count",
+    "errorUpdatingOrder": "Error updating order",
+    "errorFetchingCategories": "Error fetching categories",
+    "orderUpdateError": "Error updating order",
+    "catMain": {
+      "label": "Primary",
+      "catName": "Category name",
+      "img": "Image"
+    },
+    "catSubscriptions": {
+      "label": "Subscribable",
+      "noSub": "There is no subscription in this section"
+    },
+    "catMap": {
+      "label": "Regions",
+      "regionName": "Region name"
+    }
+  },
+  "popup": {
+    "delete_title": "Are you sure you want to delete",
+    "delete": "delete",
+    "cancel": "Cancel",
+    "delete_toast": "deleted successfully",
+    "add_toast": "added successfully",
+    "edit_toast": "edited successfully",
+    "add_title": "new category",
+    "edit_title": "edit category",
+    "save": "save",
+    "img": "image",
+    "category_name": "category name"
+  },
+  "subscriptions": {
+    "titles": {
+      "processing": "processing",
+      "approved": "approved",
+      "rejected": "rejected",
+      "expired": "expired"
+    },
+    "headers": {
+      "id": "ID",
+      "category_name": "Main-Cat",
+      "sub_name": "Sub-Cat",
+      "transaction_image": "Image",
+      "created_at": "Date",
+      "verification_period": "Period",
+      "verified_by_accept": "Accept",
+      "edit": "Show",
+      "verified_by_reject": "Reject"
+    }
+  },
+  "verification_request": {
+    "label": {
+      "label": "Subscription tickets",
+      "Part": "Category",
+      "confirm": "Confirm"
+    },
+    "titles": {
+      "processing": "processing",
+      "approved": "approved",
+      "rejected": "rejected",
+      "expired": "expired"
+    },
+    "headers": {
+      "id": "ID",
+      "verification_type": "ver_type",
+      "verification_type_number": "ver_type_Num",
+      "verification_type_image": "Src_Image",
+      "verification_required": "verified",
+      "transaction_image": "Trans_Image",
+      "created_at": "created_at",
+      "verified_at": "verified_at",
+      "By-admin": "Admin",
+      "verification_period": "Period",
+      "verified_by_accept": "Accept",
+      "verified_by_reject": "Reject",
+      "remove": "remove"
+    }
+  },
+  "Reports": {
+    "label": {
+      "label": "Reports",
+      "product": "Products",
+      "chat": "chats",
+      "userChat": "chat",
+      "isMsg": "no messages in this chat",
+      "banReason": "Ban Reason",
+      "banMassg": "The user has been successfully blocked",
+      "unbanMassg": "The user has been successfully unblocked"
+    },
+    "titles": {
+      "reports": "Report",
+      "revision": "Revision"
+    },
+    "headers": {
+      "id": "Rep-Id",
+      "name": "Customer",
+      "product": "Product",
+      "created_at": "Req-Date",
+      "actions": "Show",
+      "revision": "confirm",
+      "remove": "remove",
+
+      "speakerTo": "speaker to"
+    }
+  },
+  "notifications": {
+    "popup": {
+      "add": "Add New Notification",
+      "expiry_date": "expiry_date",
+      "placeholderMessage": " Enter Notification message here",
+      "message": "Notification Message",
+      "placeholderTitle": "Enter Notification Title here",
+      "title": "Notification Title",
+      "save": "Save",
+      "cancel": "Cancel",
+      "customers": "Customers",
+      "advertisers": "Advertisers",
+      "successfully": "Notification Added successfully",
+      "error": "Error in adding notification",
+      "Delegates": "Delegates",
+      "Observers": "Observers",
+      "Supervisors": "Supervisors"
+    }
+  },
+  "contact-us": {
+    "contact-us": "Contact Us",
+    "inquiries": "Inquiries",
+    "issues": "Issues",
+    "suggestions": "Suggestions",
+    "replied": "Replied",
+    "username": "Username",
+    "inquiryDate": "Inquiry date",
+    "ticketNumber": "Ticke number",
+    "view": "View",
+    "replyBy": "Reply by",
+    "replyDate": "Reply date",
+    "closeTicket": "Reply and close",
+    "ticketDetails": "Ticket details",
+    "reply": "Reply",
+    "deleteTicket": "Delete ticket"
+  },
+  "lastNews": {
+    "title": "Last News",
+    "lastLogin": "Has Logged In",
+    "register": "New Account",
+    "edit": "Acocount updated"
+  },
+  "charts": {
+    "Active": "Active",
+    "Lazy": "Lazy",
+    "Inactive": "Inactive",
+    "customer": "Customer",
+    "advertiser": "Advertiser",
+    "customers": "Number of customers",
+    "advertisers": "Number of advertisers",
+    "dashboard": "Dashboard",
+    "subtitle": "Overview of users and recent activity.",
+    "loading": "Loading...",
+    "noData": "No chart data available"
+  },
+  "BanList": {
+    "Ban": "Ban",
+    "unBan": "unBan",
+    "chats": {
+      "label": "Banned",
+      "pageName": "Chats",
+      "ChatId": "ChatId",
+      "byAdmin": "by Admin",
+      "banReason": "Reason",
+      "Date": "Date",
+      "show": "Show",
+      "UnBanbyAdmin": "byAdmin",
+      "UnBanReason": "UnBan Reason",
+      "UnBanDate": "UnBan Date",
+      "status": "Status"
+    },
+    "users": {
+      "label": "Banned",
+      "pageName": "Users",
+      "name": "Name",
+      "byAdmin": "by Admin",
+      "banReason": "Reason",
+      "Date": "Date",
+      "show": "Show",
+      "UnBanbyAdmin": "byAdmin",
+      "UnBanReason": "UnBan Reason",
+      "UnBanDate": "UnBan Date",
+      "status": "Status"
+    },
+    "products": {
+      "label": "Banned",
+      "pageName": "products",
+      "name": "Name",
+      "byAdmin": "by Admin",
+      "banReason": "Reason",
+      "Date": "Date",
+      "show": "Show",
+      "UnBanbyAdmin": "byAdmin",
+      "UnBanReason": "UnBan Reason",
+      "UnBanDate": "UnBan Date",
+      "status": "Status"
+    },
+    "charts": {
+      "Active": "Active",
+      "Lazy": "Lazy",
+      "Inactive": "Inactive",
+      "customer": "Customer",
+      "advertiser": "Advertiser",
+      "customers": "Number of customers",
+      "advertisers": "Number of advertisers"
+    }
+  },
+  "alert":"Please enter full admin permissions first before any field"
+}
