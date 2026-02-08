@@ -8,6 +8,11 @@ import Advertiser from './pages/users/advertiser';
 import Customer from './pages/users/Customer';
 import SignIn from './pages/Authentication/SignIn';
 import LoginLayout from './layout/LoginLayout';
+import LandingLayout from './layout/LandingLayout';
+import LandingHome from './pages/landing/LandingHome';
+import AboutUs from './pages/landing/AboutUs';
+import HowToDeleteAccount from './pages/landing/HowToDeleteAccount';
+import PrivacyPolicy from './pages/landing/PrivacyPolicy';
 import { I18nextProvider } from 'react-i18next';
 import i18next from 'i18next';
 import arTranslation from './../src/locales/ar/translation.json';
@@ -60,10 +65,20 @@ const storedPermissions: any = store.getState().permissions.permissions;
 const router = createHashRouter([
   {
     path: '/',
+    element: <LandingLayout />,
+    children: [
+      { index: true, element: <LandingHome /> },
+      { path: 'about-us', element: <AboutUs /> },
+      { path: 'how-to-delete-account', element: <HowToDeleteAccount /> },
+      { path: 'privacy-policy', element: <PrivacyPolicy /> },
+    ],
+  },
+  {
+    path: '/',
     element: <LoginLayout />,
     children: [
       {
-        path: '/auth/login',
+        path: 'auth/login',
         element: (
           <LogoutGuards>
             <SignIn />
