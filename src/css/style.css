@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 @layer base {
+  /* Évite l’effet "zoom" sur macOS / Safari : pas d’ajustement auto de la taille du texte */
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    font-size: 16px;
+  }
   body {
     @apply font-satoshi font-normal text-base text-body bg-whiten relative z-1;
   }

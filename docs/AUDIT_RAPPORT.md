@@ -1,162 +1,108 @@
-# Rapport d'audit — Roogr Admin Panel
+# Rapport d’audit — Roogr Admin Panel (post-corrections)
 
 **Date :** Février 2026  
-**Périmètre :** Application React (Vite, TypeScript, Tailwind, Redux, i18n)
+**Périmètre :** Application React (Vite, TypeScript, Tailwind, Redux, i18n)  
+**Contexte :** Audit réalisé après application des corrections du premier audit.
 
 ---
 
 ## 1. Résumé exécutif
 
-L’application est un tableau de bord d’administration fonctionnel avec authentification, permissions, multilingue (AR/EN) et thème clair/sombre. L’audit identifie des **bugs critiques** (sécurité des routes), des **problèmes de performance** (chargement initial, pas de lazy loading), des **incohérences design/UX** (loaders, états d’erreur, chemins d’images) et des **améliorations recommandées** (env, accessibilité, qualité de code).
+Les corrections du premier audit ont été appliquées : **sécurité des routes** (ProtectedRoute, permissions dynamiques, normalisation), **performance** (lazy loading, suppression du délai fixe du loader), **i18n** (init centralisée, `changeLanguage` dans un `useEffect`), **images 404/500** (chemins publics + `BASE_URL`), **configuration API** (variables d’environnement).  
+
+Le présent audit identifie les **points restants** et **nouveaux sujets** : redirection du Guard (chemin relatif), double chargement de SweetAlert2, Loader sans thème sombre, risque de crash dans la Sidebar si `permissions` est null, et recommandations (HTML, accessibilité, cohérence).
 
 ---
 
-## 2. Bugs critiques à corriger en priorité
+## 2. État des corrections du premier audit
 
-### 2.1 Protection des routes (sécurité)
+| Point | Statut |
+|-------|--------|
+| 2.1 ProtectedRoute `hasPermission` (assignation → comparaison) | Corrigé : `permissionIndex` + `value === '1' \|\| value === 1` |
+| 2.2 Permissions figées au chargement du module | Corrigé : lecture dans le store via `useSelector(checkPermissions)` dans ProtectedRoute |
+| 2.3 Images 404/500 | Corrigé : chemins avec `import.meta.env.BASE_URL` + `alt` via `t()` |
+| 3.1 Lazy loading des routes | Corrigé : `React.lazy` + `RouteSuspense` (Loader en fallback) |
+| 3.2 Loader initial fixe 1 s | Corrigé : plus de `setTimeout`, loader uniquement au premier rendu |
+| 3.3 i18n réinitialisé à chaque rendu | Corrigé : `src/i18n.ts` importé dans `main.tsx`, `changeLanguage(language)` dans `useEffect` dans App |
+| 5.1 Route `products` en doublon | Corrigé : une seule route protégée |
+| 5.2 Import inutilisé `activeUsers` | Corrigé : supprimé |
+| 5.3 Configuration API en dur | Corrigé : `VITE_API_BASE_URL` + `.env.example`, `.env.development`, `.env.production`, README |
+| Permissions tableau/chaîne avec virgules | Corrigé : normalisation dans le slice (array → string, suppression des virgules) |
 
-**Fichier :** `src/components/guards/ProtectedRoute.tsx`
+---
 
-- **Problème :** `if (hasPermission=1)` utilise l’**assignation** au lieu de la **comparaison**.
-- **Conséquence :** `hasPermission` est toujours écrasé par `1`, donc la condition est toujours vraie : **tous les utilisateurs voient toutes les pages**, indépendamment des permissions.
-- **Correction :** Remplacer par `if (hasPermission === 1)` ou `if (hasPermission === '1')` (les permissions sont des caractères `'0'`/`'1'` depuis `localStorage`).
+## 3. Bugs et problèmes restants
+
+### 3.1 Redirection du Guard vers le login (chemin relatif)
+
+**Fichier :** `src/components/guards/Guards.tsx`
+
+- **Problème :** `return <Navigate to="auth/login" />` utilise un chemin **relatif**. Selon la route courante (ex. `/charts`), la résolution peut donner `/charts/auth/login`, qui n’existe pas.
+- **Correction :** Utiliser un chemin absolu : `return <Navigate to="/auth/login" />`.
 
 ```tsx
-// Avant (bug)
-if (hasPermission=1) {
+// Avant
+return <Navigate to="auth/login" />;
 
 // Après
-if (hasPermission === 1 || hasPermission === '1') {
+return <Navigate to="/auth/login" />;
 ```
 
-- **Recommandation :** Typer correctement `hasPermission` (string ou number) et utiliser une comparaison stricte partout.
+---
+
+### 3.2 SweetAlert2 chargé deux fois
+
+**Fichier :** `index.html`
+
+- **Problème :** SweetAlert2 est chargé via le CDN et via un script local `sweetalert2.all.min.js`. Ce fichier **n’existe pas** dans `public/`. Par ailleurs, l’app utilise déjà le package npm (`import Swal from 'sweetalert2'`) dans plusieurs fichiers.
+- **Conséquence :** Conflits possibles, erreur 404 pour le script local, bundle inutilement lourd si le CDN est utilisé en plus du bundle.
+- **Correction :** Supprimer les deux balises `<script>` SweetAlert2 de `index.html` et ne garder que l’usage via le package npm (déjà en place dans les hooks/composants).
 
 ---
 
-### 2.2 Permissions lues au chargement du module
+### 3.3 Sidebar : crash si `permissions` est null
 
-**Fichier :** `src/App.tsx`
+**Fichier :** `src/components/Sidebar/index.tsx`
 
-- **Problème :** `const storedPermissions = store.getState().permissions.permissions` est exécuté **au chargement du module**, une seule fois.
-- **Conséquence :** Après login, les permissions sont dans le store et le `localStorage`, mais le **router a déjà été créé** avec l’ancien état (souvent la chaîne par défaut `'0000...'`). Les routes protégées utilisent donc des permissions potentiellement obsolètes jusqu’à un rechargement complet.
-- **Correction :** Ne pas créer le router avec des permissions figées. Options :
-  - Construire les routes à l’intérieur d’un composant qui lit `useSelector(checkPermissions)` et rendre `<RouterProvider router={router} />` seulement quand les permissions sont à jour (après login), ou
-  - Utiliser un composant par route qui lit les permissions dans le store (ou via un hook) et fait la redirection vers `/unauthorized` si besoin, au lieu de se baser sur une variable module-level.
-
----
-
-### 2.3 Images 404 / 500 introuvables
-
-**Fichiers :**  
-`src/pages/errorElement/ErrorElement.tsx`  
-`src/pages/notfound/Notfound.tsx`
-
-- **Problème :** Chemins relatants du type `./../../../500Internal.png` et `./../../../404error.png`. En build Vite, les chemins relatants depuis `src/` ne pointent pas vers `public/`.
-- **Conséquence :** En production, les images d’erreur ne s’affichent pas (404).
-- **Correction :** Utiliser des chemins publics absolus, par exemple :
-  - `src="/404error.png"` et `src="/500Internal.png"` (fichiers dans `public/`),
-  - ou importer les assets depuis `src` si vous les déplacez et que Vite les hash.
-
-Vérifier que `public/404error.png` et `public/500Internal.png` existent (ou les ajouter / renommer selon le nom réel).
-
----
-
-## 3. Performance et chargement des pages
-
-### 3.1 Pas de lazy loading des routes
-
-**Fichier :** `src/App.tsx`
-
-- **Problème :** Plus de 50 composants de pages importés en **static** en haut du fichier. Tout le code de toutes les pages est chargé au premier chargement de l’app.
-- **Conséquence :** Bundle JS initial très lourd, premier affichage lent, surtout sur mobile ou connexions lentes.
-- **Correction :** Utiliser `React.lazy` et `Suspense` pour les routes :
+- **Problème :** `const permissions = localStorage.getItem('permissions');` peut renvoyer `null`. Ensuite `permissions[0]`, `permissions[1]`, etc. sont utilisés dans l’état initial et dans le `useEffect`, ce qui peut provoquer une erreur (accès à une propriété de `null`).
+- **Correction :** Utiliser une valeur par défaut (ex. chaîne de 22 zéros) ou le store Redux pour les permissions, et ne jamais indexer `null` :
 
 ```tsx
-import { lazy, Suspense } from 'react';
-
-const Charts = lazy(() => import('./pages/home/home'));
-const SignIn = lazy(() => import('./pages/Authentication/SignIn'));
-// ... idem pour chaque page
-
-// Dans le router, envelopper les éléments avec :
-<Suspense fallback={<Loader />}>
-  <ProtectedRoute component={Charts} hasPermission={...} />
-</Suspense>
+const permissionsRaw = localStorage.getItem('permissions');
+const permissions = permissionsRaw ?? '0000000000000000000000';
 ```
 
-- **Recommandation :** Un fallback commun (ex. le composant `Loader` existant) pour toutes les routes lazy. Enchaîner avec une analyse du bundle (`vite build --mode analyze` si vous ajoutez `rollup-plugin-visualizer`) pour vérifier la réduction de la taille du chunk initial.
-
----
-
-### 3.2 Loader initial fixe (1 seconde)
-
-**Fichier :** `src/App.tsx`
-
-- **Problème :** `setTimeout(..., 1000)` : l’utilisateur attend toujours au moins 1 seconde au démarrage, même si l’app est prête avant.
-- **Correction :** Afficher le loader uniquement le temps du chargement réel (i18n, restauration de session, etc.). Exemple : un état `isAppReady` basé sur la fin de l’init i18n et, si besoin, une vérification token/session, puis `setLoading(false)` sans délai fixe.
-
----
-
-### 3.3 i18n réinitialisé à chaque rendu
-
-**Fichier :** `src/App.tsx`
-
-- **Problème :** `i18next.init({ ... })` est appelé dans le corps du composant `App`, donc à **chaque rendu** (ex. changement de langue).
-- **Conséquence :** Risque de réinitialisation inutile, comportement potentiellement instable, perte de langue courante si elle n’est pas repassée dans `init`.
-- **Correction :** Déplacer l’initialisation d’i18next dans un fichier dédié (ex. `src/i18next.ts` ou `src/i18n.ts`) et l’importer une fois au point d’entrée (`main.tsx`). Dans `App`, utiliser uniquement `i18next.changeLanguage(language)` dans un `useEffect` quand `language` change, sans rappeler `init`.
+Ou préférer `useSelector(checkPermissions)` pour rester cohérent avec ProtectedRoute et le slice (normalisation déjà en place).
 
 ---
 
 ## 4. Design et expérience utilisateur
 
-### 4.1 Loader global et loaders par page
+### 4.1 Loader global et thème sombre
 
-- **Loader global :** `src/common/Loader/index.tsx` est très minimal (spinner seul, fond blanc). Il ne reflète pas le thème (dark) ni la charte (couleurs primaires / logo).
-- **Recommandation :** Adapter le Loader au thème (classe `dark:bg-primaryBG-dark` ou équivalent) et réutiliser ce même composant comme fallback des routes lazy.
+**Fichier :** `src/common/Loader/index.tsx`
 
-### 4.2 États de chargement et d’erreur incohérents
+- **Constat :** Le loader utilise `bg-white` uniquement. En mode sombre, le fond reste blanc.
+- **Recommandation :** Adapter au thème, par exemple : `className="... bg-white dark:bg-primaryBG-dark"` (ou la classe de fond sombre utilisée ailleurs dans l’app).
 
-- Plusieurs pages **n’affichent pas** d’état de chargement ou d’erreur (ex. `users.tsx`, `products.tsx`, `PrdDetials.tsx`, `CategorySubscription.tsx`) : code commenté du type `// if (loading) return <p>Loading...</p>;`.
-- **Recommandation :**
-  - Décommenter et afficher un loader (idéalement le composant `Loader` ou un skeleton) pendant le chargement.
-  - Afficher un message d’erreur clair + bouton “Réessayer” en cas d’échec API, au lieu de laisser une liste vide ou une page blanche.
+### 4.2 États de chargement et d’erreur
 
-### 4.3 Breadcrumb et RTL
-
-- **Fichier :** `src/components/Breadcrumbs/Breadcrumb.tsx`
-- Le séparateur `/` et l’ordre des liens peuvent être inadaptés en RTL (arabe). Vérifier que l’ordre visuel et le sens de lecture sont corrects quand `dir="rtl"` (utilisation de `flex-row-reverse` ou ordre logique des éléments si nécessaire).
-
-### 4.4 Cohérence des couleurs et des composants
-
-- Mélange de couleurs en dur (`#0E1FB2`, `#70F1EB`, `#32E26B`, etc.) et de classes Tailwind. Pour la maintenabilité et le dark mode, centraliser les couleurs dans `tailwind.config.cjs` (ou variables CSS) et les réutiliser partout.
-- Réutiliser des composants communs pour les cartes, boutons et listes (ex. une “Card” commune, un “DataTable” avec loading/empty/error) pour un design plus homogène.
+- Plusieurs pages pourraient encore avoir des états loading/error commentés ou absents. Vérifier les pages qui appellent l’API (users, products, etc.) et s’assurer qu’elles affichent un loader/skeleton et un message d’erreur + action « Réessayer » si pertinent.
 
 ---
 
 ## 5. Structure du code et maintenabilité
 
-### 5.1 Routes dupliquées
+### 5.1 Fichier i18next.ts redondant
 
-**Fichier :** `src/App.tsx`
+**Fichier :** `src/i18next.ts`
 
-- Deux routes avec `path: 'products'` : une avec `ProtectedRoute`, une sans. La deuxième n’est jamais atteinte. Supprimer la route en doublon et ne garder qu’une définition (avec ou sans `ProtectedRoute` selon la règle métier).
+- **Constat :** Ce fichier configure i18n avec Backend et LanguageDetector. L’app utilise désormais `src/i18n.ts` (ressources inline, init dans `main.tsx`). `LandingLayout` et `LanguageSwitcher` pointent vers `../i18n` / `../../i18n`.
+- **Recommandation :** Supprimer `src/i18next.ts` s’il n’est plus référencé nulle part, ou le documenter clairement s’il est conservé pour un usage futur (ex. chargement async des traductions).
 
-### 5.2 Imports inutilisés
+### 5.2 Cohérence des couleurs
 
-- `activeUsers` est importé alors que la route utilise `activeCustomers`. Supprimer l’import `activeUsers` s’il n’est utilisé nulle part.
-
-### 5.3 Configuration API en dur
-
-**Fichier :** `src/axiosConfig/instanc.tsx`
-
-- **Problème :** `baseURL: 'https://roogr.sa/api/v1/admin'` en dur. Pas de `process.env` / `import.meta.env` utilisé dans le projet.
-- **Recommandation :** Introduire des variables d’environnement, par exemple :
-  - `import.meta.env.VITE_API_BASE_URL` (Vite) pour la base URL de l’API.
-  - Fichiers `.env`, `.env.development`, `.env.production` (à ne pas commiter avec des secrets). Documenter dans le README.
-
-### 5.4 Typage des permissions
-
-- `hasPermission` est typé `number` dans `ProtectedRoute` alors que les permissions viennent d’une chaîne (`permissions[7]` => `'0'` ou `'1'`). Les index dans `App.tsx` utilisent des nombres. Harmoniser le type (string ou number) et la comparaison (`=== '1'` ou `=== 1`) partout pour éviter des bugs silencieux.
+- Des couleurs en dur (`#F9FAFF`, `#14141A` dans DefaultLayout, etc.) coexistent avec des classes Tailwind (ex. `primary`, `primaryBG-dark`). Pour la maintenabilité et le dark mode, centraliser les couleurs dans `tailwind.config` ou des variables CSS et les réutiliser partout.
 
 ---
 
@@ -164,60 +110,43 @@ const SignIn = lazy(() => import('./pages/Authentication/SignIn'));
 
 ### 6.1 index.html
 
-- `lang="en"` fixe : en multilingue, idéalement le `lang` devrait refléter la langue courante (ou au moins être mis à jour côté client si possible).
-- Pas de meta description ni de balises Open Graph. Recommandation : au moins une meta description et un titre cohérent avec l’app (déjà “Roogr Dashboard”).
+**Fichier :** `index.html`
 
-### 6.2 Images
+- **lang :** `lang="en"` est fixe alors que l’app est bilingue (AR/EN). Idéalement, mettre à jour `document.documentElement.lang` côté client en fonction de la langue courante (déjà géré pour `dir` dans App).
+- **Meta :** Aucune meta description ni balises Open Graph. Recommandation : au moins une meta description et un titre cohérent (le titre « Roogr Dashboard » est déjà pertinent).
 
-- Plusieurs `<img>` sans `alt` pertinent (ex. ErrorElement, Notfound). Toujours mettre un `alt` descriptif (ex. “Page non trouvée”, “Erreur serveur”) pour l’accessibilité et le SEO.
+### 6.2 Breadcrumb et RTL
 
-### 6.3 Focus et navigation clavier
+**Fichier :** `src/components/Breadcrumbs/Breadcrumb.tsx`
 
-- Vérifier que les modales, sidebars et menus déroulants sont fermables au clavier (Escape, focus trap). Le `DefaultLayout` gère déjà un overlay et Escape pour le sidebar ; à étendre aux popups et formulaires si besoin.
+- En RTL (arabe), l’ordre visuel des liens et le séparateur `/` peuvent être inadaptés. Vérifier l’ordre et le sens (ex. `flex-row-reverse` ou ordre logique des éléments) lorsque `dir="rtl"`.
 
 ---
 
 ## 7. Sécurité et bonnes pratiques
 
-### 7.1 Données sensibles en localStorage
-
-- Token, email, prénom, nom sont stockés dans `localStorage`. C’est acceptable pour un admin, mais en cas de XSS tout est lisible. Recommandation : pas de données ultra-sensibles en clair ; sécuriser les entrées (CSP, sanitization) et limiter la durée de vie du token côté backend.
-
-### 7.2 Gestion 401
-
-- L’intercepteur axios déconnecte et redirige vers `/#/auth/login`. C’est cohérent ; vérifier que le token est bien supprimé et que l’utilisateur ne peut pas revenir en arrière sur des pages protégées sans se reconnecter.
+- **Token / 401 :** L’intercepteur axios déconnecte et redirige vers `/#/auth/login` en cas de 401 ; le slice auth nettoie le localStorage. Comportement cohérent ; s’assurer que le token est bien supprimé et que l’utilisateur ne peut pas accéder aux routes protégées sans se reconnecter.
+- **Données sensibles :** Token et données utilisateur dans le localStorage restent exposées en cas de XSS. Limiter les données stockées, sécuriser les entrées (CSP, sanitization) et limiter la durée de vie du token côté backend.
 
 ---
 
-## 8. Scripts et assets externes
-
-**Fichier :** `index.html`
-
-- SweetAlert2 est chargé deux fois : CDN + `sweetalert2.all.min.js` (fichier local peut-être absent). Garder une seule source (de préférence le package npm déjà dans le projet) et supprimer les scripts externes dupliqués pour éviter conflits et temps de chargement inutile.
-
----
-
-## 9. Plan d’action recommandé
+## 8. Plan d’action recommandé
 
 | Priorité | Action |
 |----------|--------|
-| P0       | Corriger `ProtectedRoute` : `hasPermission === 1` ou `=== '1'`. |
-| P0       | Corriger les chemins des images 404/500 (chemins publics). |
-| P1       | Ne plus figer les permissions au chargement du module ; lire les permissions depuis le store au moment de l’accès à une route (ou recréer le router après login). |
-| P1       | Introduire le lazy loading des routes avec `React.lazy` + `Suspense` et un fallback commun. |
-| P1       | Supprimer le délai fixe de 1 s du loader initial ; lier le loader au chargement réel de l’app. |
-| P2       | Déplacer `i18next.init` dans un module chargé une fois ; utiliser `changeLanguage` dans `App`. |
-| P2       | Afficher des états loading/error sur toutes les pages qui font des appels API (réutiliser un même pattern). |
-| P2       | Supprimer la route `products` en doublon et l’import inutilisé `activeUsers`. |
-| P2       | Utiliser des variables d’environnement pour la base URL de l’API. |
-| P3       | Améliorer le Loader global (thème, cohérence). |
-| P3       | Vérifier Breadcrumb et composants en RTL. |
-| P3       | Ajouter meta description et `alt` aux images ; unifier les couleurs dans la config Tailwind. |
+| **P0** | Guard : utiliser `<Navigate to="/auth/login" />` (chemin absolu). |
+| **P0** | Supprimer les scripts SweetAlert2 de `index.html` (CDN + script local). |
+| **P1** | Sidebar : sécuriser l’accès à `permissions` (valeur par défaut ou `useSelector(checkPermissions)`). |
+| **P2** | Loader : ajouter le support du thème sombre (`dark:bg-...`). |
+| **P2** | Supprimer ou documenter `src/i18next.ts` s’il n’est plus utilisé. |
+| **P2** | index.html : meta description ; optionnellement mettre à jour `lang` côté client. |
+| **P3** | Breadcrumb : vérifier l’affichage en RTL. |
+| **P3** | Centraliser les couleurs (Tailwind / variables CSS). |
 
 ---
 
-## 10. Conclusion
+## 9. Conclusion
 
-Le projet est utilisable au quotidien mais comporte un **bug critique de permissions** et des **chemins d’assets cassés en production**. Les corrections P0 et P1 (sécurité, permissions, lazy loading, loader) apporteront une amélioration forte en sécurité et en performance. Les points P2/P3 consolideront la maintenabilité, l’UX et l’accessibilité.
+Les corrections du premier audit ont nettement amélioré la **sécurité** (ProtectedRoute, permissions dynamiques), la **performance** (lazy loading, loader sans délai fixe) et la **maintenabilité** (i18n, env, images).  
 
-Si vous souhaitez, on peut détailler les modifications fichier par fichier pour une des sections (par exemple uniquement sécurité et routes, ou uniquement performance).
+Il reste à **corriger la redirection du Guard** et le **double chargement de SweetAlert2**, et à **sécuriser la Sidebar** face à `permissions` null. Les points P2/P3 renforcent la cohérence design, l’accessibilité et la qualité du code.

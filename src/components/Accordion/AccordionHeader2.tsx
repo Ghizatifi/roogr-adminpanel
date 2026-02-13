@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import AccordionTitle from './AcoordionHeader2Tile';
-// import AccordionTitle from './AccordionHeader2Tile';
+import { TabsPill } from '../TabsPill';
 
 interface AccordionProps {
   titles: string[];
@@ -15,40 +14,33 @@ const AccordionHeader2: React.FC<AccordionProps> = ({
   footerItems,
   onTitleClick,
 }) => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
-    // Only call onTitleClick if it is provided
     if (onTitleClick) {
       onTitleClick(index);
     }
+  };
+
+  const tabs = titles.map((label, i) => ({ id: String(i), label }));
+  const value = openIndex === null ? '' : String(openIndex);
+  const handleTabChange = (id: string) => {
+    const index = Number(id);
+    toggleAccordion(index);
   };
 
   return (
     <>
       <div className="mb-5b my-3 dark:bg-MainTableBG-EvenDark bg-MainTableBG-EvenLight">
         <div className="mx-4 flex justify-between cursor-pointer">
-          {/* <div className="py-2 flex justify-start gap-0.5 cursor-pointer">
-            {titles?.map((title, index) => (
-              <AccordionTitle
-                key={index}
-                title={title}
-                isOpen={openIndex === index}
-                onToggle={() => toggleAccordion(index)}
-              />
-            ))}
-          </div> */}
-          <div className="py-2 flex flex-wrap justify-start gap-1 sm:gap-3 md:gap-0.5 cursor-pointer">
-            {titles?.map((title, index) => (
-              <AccordionTitle
-                key={index}
-                title={title}
-                isOpen={openIndex === index}
-                onToggle={() => toggleAccordion(index)}
-                className="flex-1 min-w-[150px] sm:min-w-[200px] md:min-w-[250px]" // Adjusts width per screen size
-              />
-            ))}
+          <div className="py-2 flex flex-wrap items-center gap-2">
+            <TabsPill
+              tabs={tabs}
+              value={value}
+              onChange={handleTabChange}
+              glider={true}
+            />
           </div>
           <div>
             {footerItems?.map((item, index) => (

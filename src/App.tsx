@@ -650,6 +650,8 @@ const App: React.FC = () => {
 
   useEffect(() => {
     i18n.changeLanguage(language);
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
   }, [language]);
 
   return loading ? (

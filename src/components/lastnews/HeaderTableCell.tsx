@@ -1,17 +1,18 @@
 import React from 'react';
 
 interface HeaderTableCellProps {
-  content: string;
-  className: string;
+  content: React.ReactNode;
+  className?: string;
 }
 
 const HeaderTableCell: React.FC<HeaderTableCellProps> = ({
   content,
-  className,
+  className = '',
 }) => {
   return (
     <th
-      className={`p-3 py-2 border-l text-[14px] border-l-TheadBorder-light dark:border-l-TheadBorder-dark font-[400] dark:text-[#FFFFFF] text-[#000000] ${className}`}
+      scope="col"
+      className={`flex-1 min-w-0 p-3 py-2.5 text-[14px] font-medium text-[#374151] dark:text-gray-200 border-l border-[#E6E8F5] dark:border-strokedark first:border-l-0 ${className}`}
     >
       {content}
     </th>

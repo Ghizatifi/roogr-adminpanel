@@ -1,181 +1,125 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import HeaderTableCell from './HeaderTableCell';
 import TableCell from './TableCell';
 
-interface MainTableProps {
-  logs: any;
-  headers?: any;
-  header2?: boolean;
+export interface HeaderColumn {
+  key: string;
+  content: React.ReactNode;
+  className?: string | ((rowIndex: number) => string);
 }
 
-const MainTable: React.FC<MainTableProps> = ({ logs, headers, header2 }) => {
+export interface LogColumn {
+  key?: string;
+  content: React.ReactNode;
+  className?: string | ((rowIndex: number) => string);
+  isIcon?: boolean;
+  IconComponent?: React.ComponentType<{ className?: string }>;
+  iconClass?: string;
+}
+
+export interface LogRow {
+  id?: number | string;
+  customer_activity_id?: number;
+  columns: LogColumn[];
+}
+
+interface MainTableProps {
+  logs: LogRow[] | null | undefined;
+  headers?: HeaderColumn[];
+  header2?: boolean;
+  /** Accessible description for the table */
+  ariaLabel?: string;
+}
+
+const MainTable: React.FC<MainTableProps> = ({
+  logs,
+  headers = [],
+  header2,
+  ariaLabel,
+}) => {
+  const { t } = useTranslation();
+  const hasHeaders = headers && headers.length > 0;
+  const hasLogs = logs && logs.length > 0;
+  const columnCount = hasHeaders ? headers.length : (hasLogs && logs[0]?.columns) ? logs[0].columns.length : 1;
+
   return (
-    <div className="relative overflow-x-auto scroll-smooth  ">
-      <table className="w-full text-[20px] text-left rtl:text-right">
-        {/* Render thead for headers if provided */}
-        {headers && logs?.length > 0 && headers.length > 0 && (
-          <thead className="bg-[#EDEDED] dark:bg-[#3E3E46]">
-            <tr className="flex justify-between">
-              {headers?.map((header) => (
+    <div className="relative overflow-x-auto scroll-smooth rounded-xl border border-[#E6E8F5] dark:border-strokedark">
+      <table
+        className="w-full min-w-[600px] table-auto text-left rtl:text-right text-base"
+        role="grid"
+        aria-label={ariaLabel}
+      >
+        {hasHeaders && (
+          <thead>
+            <tr className="flex border-b border-[#E6E8F5] bg-[#F9FAFF] dark:border-strokedark dark:bg-white/5">
+              {headers.map((header) => (
                 <HeaderTableCell
                   key={header.key}
                   content={header.content}
-                  className={`flex-1 ${
+                  className={
                     typeof header.className === 'function'
-                      ? header.className(0) // Assuming index 0 for header rows
-                      : header.className
-                  }`}
+                      ? header.className(0)
+                      : header.className ?? ''
+                  }
                 />
               ))}
             </tr>
           </thead>
         )}
-
-    <tbody>
-  {logs?.map((log, index) => (
-    <tr
-      key={`row-${log.customer_activity_id ?? index}`}
-      className={`flex justify-between items-center ${
-        header2
-          ? index % 2 === 0
-            ? 'dark:bg-MainTableBG-OddDark bg-MainTableBG-OddLight'
-            : 'dark:bg-MainTableBG-EvenDark bg-MainTableBG-EvenLight'
-          : index % 2 === 0
-          ? 'dark:bg-MainTableBG-EvenDark bg-MainTableBG-EvenLight'
-          : 'dark:bg-MainTableBG-OddDark bg-MainTableBG-OddLight'
-      }`}
-    >
-      {log.columns.map((col, colIndex) => (
-        <TableCell
-          key={`cell-${log.customer_activity_id ?? index}-${col.key ?? colIndex}`}
-          content={
-            col.isIcon ? (
-              <span className="flex items-center">
-                {col.IconComponent && (
-                  <col.IconComponent className={col.iconClass} />
-                )}
-                {col.content}
-              </span>
-            ) : (
-              col.content
-            )
-          }
-          className={`flex-1 ${
-            typeof col.className === 'function' ? col.className(index) : col.className
-          }`}
-        />
-      ))}
-    </tr>
-  ))}
-</tbody>
-
+        <tbody>
+          {hasLogs ? (
+            logs.map((log, index) => (
+              <tr
+                key={log.id ?? log.customer_activity_id ?? `row-${index}`}
+                className={
+                  header2
+                    ? index % 2 === 0
+                      ? 'flex bg-[#F9FAFF] dark:bg-MainTableBG-OddDark border-b border-[#E6E8F5]/50 dark:border-strokedark/50'
+                      : 'flex bg-white dark:bg-MainTableBG-EvenDark border-b border-[#E6E8F5]/50 dark:border-strokedark/50'
+                    : index % 2 === 0
+                    ? 'flex bg-white dark:bg-MainTableBG-EvenDark border-b border-[#E6E8F5]/50 dark:border-strokedark/50'
+                    : 'flex bg-[#F9FAFF] dark:bg-MainTableBG-OddDark border-b border-[#E6E8F5]/50 dark:border-strokedark/50'
+                }
+              >
+                {log.columns.map((col, colIndex) => (
+                  <TableCell
+                    key={col.key ?? `cell-${index}-${colIndex}`}
+                    content={
+                      col.isIcon ? (
+                        <span className="flex items-center justify-center gap-1">
+                          {col.IconComponent && (
+                            <col.IconComponent className={col.iconClass} />
+                          )}
+                          {col.content}
+                        </span>
+                      ) : (
+                        col.content
+                      )
+                    }
+                    className={
+                      typeof col.className === 'function'
+                        ? col.className(index)
+                        : col.className
+                    }
+                  />
+                ))}
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={columnCount}
+                className="px-4 py-8 text-center text-[#A5A9C5] dark:text-bodydark text-sm"
+              >
+                {t('NotData')}
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
     </div>
   );
 };
 
 export default MainTable;
-// import React, { useEffect, useState } from 'react';
-// import HeaderTableCell from './HeaderTableCell';
-// import TableCell from './TableCell';
-
-// interface MainTableProps {
-//   logs: any;
-//   headers?: any;
-//   header2?: boolean;
-// }
-
-// const MainTable: React.FC<MainTableProps> = ({ logs, headers, header2 }) => {
-//   const [isXScrollable, setIsXScrollable] = useState(false);
-
-//   useEffect(() => {
-//     const handleResize = () => {
-//       setIsXScrollable(window.innerWidth <= 1000);
-//     };
-//     handleResize();
-//     window.addEventListener('resize', handleResize);
-//     return () => {
-//       window.removeEventListener('resize', handleResize);
-//     };
-//   }, []);
-
-//   return (
-//     <div
-//       className={`relative ${
-//         isXScrollable ? 'overflow-x-scroll' : ''
-//       } scroll-smooth `}
-//     >
-//       <table className="w-full text-[20px] text-left rtl:text-right">
-//         {/* Render thead for headers if provided */}
-//         {headers && logs?.length > 0 && headers.length > 0 ? (
-//           <thead className="bg-[#EDEDED] dark:bg-[#3E3E46]">
-//             <tr className="flex justify-between">
-//               {headers?.map((header) => (
-//                 <HeaderTableCell
-//                   key={header.key}
-//                   content={header.content}
-//                   className={`flex-1 ${
-//                     typeof header.className === 'function'
-//                       ? header.className(0)
-//                       : header.className
-//                   }`}
-//                 />
-//               ))}
-//             </tr>
-//           </thead>
-//         ) : null}
-
-//         <tbody>
-//           {/* Render logs */}
-//           {logs?.length > 0 ? (
-//             logs.map((log, index) => (
-//               <tr
-//                 key={log.id}
-//                 className={`flex justify-between items-center ${
-//                   header2 // Check if header2 is true
-//                     ? index % 2 === 0
-//                       ? 'dark:bg-MainTableBG-OddDark bg-MainTableBG-OddLight'
-//                       : 'dark:bg-MainTableBG-EvenDark bg-MainTableBG-EvenLight'
-//                     : index % 2 === 0
-//                     ? 'dark:bg-MainTableBG-EvenDark bg-MainTableBG-EvenLight'
-//                     : 'dark:bg-MainTableBG-OddDark bg-MainTableBG-OddLight'
-//                 }`}
-//               >
-//                 {log.columns.map((col) => (
-//                   <TableCell
-//                     key={col.key}
-//                     content={
-//                       col.isIcon ? (
-//                         <span className="flex items-center">
-//                           {col.IconComponent && (
-//                             <col.IconComponent className={col.iconClass} />
-//                           )}
-//                           {col.content}
-//                         </span>
-//                       ) : (
-//                         col.content
-//                       )
-//                     }
-//                     className={`flex-1 ${
-//                       typeof col.className === 'function'
-//                         ? col.className(index)
-//                         : col.className
-//                     }`}
-//                   />
-//                 ))}
-//               </tr>
-//             ))
-//           ) : (
-//             <tr>
-//               <td colSpan={headers?.length || 1} className="text-center py-4">
-//                 No data available.
-//               </td>
-//             </tr>
-//           )}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// };
-
-// export default MainTable;

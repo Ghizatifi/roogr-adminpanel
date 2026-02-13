@@ -7,7 +7,6 @@ import LanguageSwitcher from './LanguageSwitcher';
 import { CiSearch } from 'react-icons/ci';
 import { useTranslation } from 'react-i18next';
 import DropdownNotification from '../notification/DropdownNotification';
-import { HiOutlineUserCircle } from 'react-icons/hi2';
 import axiosInstance from '../../axiosConfig/instanc';
 
 const Header = (props: {
@@ -96,14 +95,18 @@ const Header = (props: {
     }
   };
 
+  const isRtl = language === 'ar';
+  // RTL: loupe à droite dans l'input. LTR: miroir = loupe à gauche.
+  const searchIconEnd = isRtl;
+
   return (
     <header
-      dir="ltr"
-      className="sticky top-0 z-999 w-full border-b border-stroke bg-white/95 shadow-sm backdrop-blur dark:border-strokedark dark:bg-boxdark/95"
+      dir={isRtl ? 'rtl' : 'ltr'}
+      className="sticky top-0 z-999 w-full border-b border-[#E6E8F5] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] dark:border-strokedark dark:bg-boxdark/95 dark:shadow-none"
     >
-      <div className="flex h-16 items-center justify-between gap-4 px-4 md:px-6 2xl:px-8">
-        {/* Left: hamburger (mobile) + logo */}
-        <div className="flex min-w-0 shrink-0 items-center gap-3">
+      <div className="grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 md:px-6 md:h-[60px] 2xl:px-8">
+        {/* Left column: empty on desktop, hamburger only on mobile */}
+        <div className="flex min-w-0 items-center">
           <button
             aria-controls="sidebar"
             onClick={(e) => {
@@ -111,52 +114,62 @@ const Header = (props: {
               props.setSidebarOpen(true);
               props.setIsOpen(true);
             }}
-            className="z-99999 flex h-9 w-9 items-center justify-center rounded-lg border border-stroke bg-white text-black shadow-sm transition-colors hover:bg-gray/10 dark:border-strokedark dark:bg-boxdark dark:text-white dark:hover:bg-white/10 md:hidden"
+            className="z-99999 flex h-9 w-9 items-center justify-center rounded-lg border border-[#E6E8F5] bg-white text-[#374151] transition-colors hover:bg-[#F9FAFF] dark:border-strokedark dark:bg-boxdark dark:text-gray-300 dark:hover:bg-white/10 md:hidden"
           >
             <span className="sr-only">Menu</span>
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <DarkModeSwitcher />
         </div>
 
-        {/* Center: search */}
+        {/* Center column: search pill, centered, max-width 360–520px */}
         <div
-          className="hidden min-w-0 flex-1 max-w-md sm:block lg:max-w-xl"
-          dir={language === 'ar' ? 'rtl' : 'ltr'}
+          className="relative flex min-w-0 justify-center sm:block"
+          dir={isRtl ? 'rtl' : 'ltr'}
         >
-          <div className="relative">
+          <div className="relative w-full max-w-[min(100%,520px)] min-w-0 sm:min-w-[280px]">
             <CiSearch
-              className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-body dark:text-bodydark ${
-                language === 'ar' ? 'left-3' : 'right-3'
+              className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-[#9AA0B8] dark:text-bodydark pointer-events-none ${
+                searchIconEnd ? 'right-3 left-auto' : 'left-3 right-auto'
               }`}
             />
             <input
               type="text"
               placeholder={t('header.search')}
               onKeyDown={(e) => handleSearch(e)}
-              className="w-full rounded-xl border border-stroke bg-gray/30 py-2.5 pl-4 pr-10 text-sm text-black outline-none transition-colors placeholder:text-body focus:border-primary focus:bg-white dark:border-strokedark dark:bg-white/5 dark:text-white dark:placeholder:text-bodydark dark:focus:border-[#70F1EB]"
+              className="w-full rounded-full border py-2 text-sm text-black outline-none transition-colors placeholder:text-[#9AA0B8] dark:text-white dark:bg-white/5 dark:placeholder:text-bodydark dark:focus:border-[#70F1EB] focus:border-[#3FC2BA] focus:bg-white min-h-[38px] sm:min-h-[42px]"
+              style={{
+                borderColor: '#E6E8F5',
+                backgroundColor: 'rgba(230, 232, 245, 0.2)',
+                paddingLeft: searchIconEnd ? '0.75rem' : '2.5rem',
+                paddingRight: searchIconEnd ? '2.5rem' : '0.75rem',
+              }}
             />
           </div>
         </div>
 
-        {/* Right: profile, notifications, language — ordre logique */}
-        <ul className="flex shrink-0 list-none items-center gap-1 sm:gap-2">
+        {/* Right column: actions (theme, notifications, language, profile) */}
+        <ul className="flex shrink-0 list-none items-center justify-end gap-0.5 sm:gap-1">
+          <li>
+            <DarkModeSwitcher headerOnly />
+          </li>
+          <DropdownNotification />
+          <li className="rounded-full transition-colors hover:bg-[#F9FAFF] dark:hover:bg-white/10">
+            <LanguageSwitcher />
+          </li>
+          {/* Profile icon — désactivé
           <li>
             <Link
               to={adminId ? `/admins/profile/${adminId}` : '/admins'}
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-body transition-colors hover:bg-gray/20 hover:text-black dark:text-bodydark dark:hover:bg-white/10 dark:hover:text-white sm:h-10 sm:w-10"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-[#374151] transition-colors hover:bg-[#F9FAFF] hover:text-[#111827] dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-white sm:h-10 sm:w-10"
               title={t('admins.profileTitle') || 'Admin profile'}
               aria-label={t('admins.profileTitle') || 'Admin profile'}
             >
-              <HiOutlineUserCircle className="h-6 w-6 shrink-0" />
+              <HiOutlineUserCircle className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
             </Link>
           </li>
-          <DropdownNotification />
-          <li className="rounded-xl transition-colors hover:bg-gray/20 dark:hover:bg-white/10">
-            <LanguageSwitcher />
-          </li>
+          */}
         </ul>
       </div>
     </header>

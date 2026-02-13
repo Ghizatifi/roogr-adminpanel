@@ -7,7 +7,7 @@ const DefaultLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   return (
-    <div className="min-h-screen bg-[#F9FAFF] dark:bg-[#14141A]">
+    <div className="min-h-screen bg-primaryBG-light dark:bg-primaryBG-dark">
       <div className="flex h-screen overflow-hidden">
         {/* Overlay mobile : cliquer ferme le sidebar */}
         <div

@@ -50,7 +50,7 @@ export default function LandingLayout() {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F9FAFF] dark:bg-[#14141A]">
+    <div className="min-h-screen flex flex-col bg-primaryBG-light dark:bg-primaryBG-dark">
       <header className="landing-header sticky top-0 z-50 w-full border-b border-[#022E47]/10 bg-white/95 backdrop-blur-md dark:border-[#70F1EB]/20 dark:bg-[#1E1E26]/95">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link

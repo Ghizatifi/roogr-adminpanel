@@ -21,7 +21,7 @@ const slides = [
     subtitle: 'Available on App Store and Google Play.',
     cta: 'See links below',
     ctaLink: '#download',
-    gradient: 'from-[#14141A] via-[#022E47] to-[#14141A]',
+    gradient: 'from-primaryBG-dark via-login-light to-primaryBG-dark',
   },
 ];
 
@@ -107,7 +107,7 @@ export default function LandingHome() {
       </section>
 
       {/* App Store & Play Store */}
-      <section id="download" className="landing-download relative overflow-hidden bg-[#F9FAFF] py-20 dark:bg-[#14141A]">
+      <section id="download" className="landing-download relative overflow-hidden bg-primaryBG-light py-20 dark:bg-primaryBG-dark">
         <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-[#022E47]/30 to-transparent dark:via-[#70F1EB]/30" />
         <div className="relative mx-auto max-w-4xl px-6 text-center">
           <h2 className="landing-anim-on-scroll mb-4 text-3xl font-bold text-[#022E47] dark:text-[#70F1EB] sm:text-4xl">

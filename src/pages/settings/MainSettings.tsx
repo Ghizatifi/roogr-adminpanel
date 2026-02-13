@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import TabButton from '../../components/setting/TabButton';
+import { TabsPill } from '../../components/TabsPill';
 import { useTranslation } from 'react-i18next';
 import TermsSetting from './TermsSetting';
 import ComissionSetting from './ComissionSetting';
@@ -25,62 +25,37 @@ const MainSettings: React.FC = () => {
   }, [activeTab]);
   const translatedTabLabel = t(`settings.${activeTab}`);
 
+  const settingsTabs = [
+    { id: 'terms', label: t('settings.terms') },
+    { id: 'comission', label: t('settings.comission') },
+    { id: 'banks', label: t('settings.banks') },
+    { id: 'sms', label: t('settings.sms') },
+    { id: 'verification', label: t('settings.verification') },
+    { id: 'banners', label: t('settings.banners') },
+    { id: 'other', label: t('settings.other') },
+  ];
+
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    sessionStorage.setItem('activeTab', tabId);
+  };
+
   return (
     <>
       <Breadcrumb
         pageName={translatedTabLabel}
         breadcrumbLinks={breadcrumbLinks}
       />
-      <div className="md:flex bg-secondaryBG-light dark:bg-secondaryBG-dark p-4 rounded">
-        <ul
-          className={`flex-column space-y space-y-2 ${
-            language === 'ar' ? 'w-52' : 'w-64'
-          } text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0`}
-        >
-          <TabButton
-            btnTab="terms"
-            label={t('settings.terms')}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
+      <div className="md:flex flex-col bg-secondaryBG-light dark:bg-secondaryBG-dark p-4 rounded">
+        <div className={`mb-4 overflow-x-auto md:mb-4 ${language === 'ar' ? 'md:ms-4' : 'md:me-4'}`}>
+          <TabsPill
+            tabs={settingsTabs}
+            value={activeTab}
+            onChange={handleTabChange}
+            glider={true}
           />
-          <TabButton
-            btnTab="comission"
-            label={t('settings.comission')}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-          <TabButton
-            btnTab="banks"
-            label={t('settings.banks')}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-          <TabButton
-            btnTab="sms"
-            label={t('settings.sms')}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-          <TabButton
-            btnTab="verification"
-            label={t('settings.verification')}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-          <TabButton
-            btnTab="banners"
-            label={t('settings.banners')}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-          <TabButton
-            btnTab="other"
-            label={t('settings.other')}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-        </ul>
-        <div className="text-medium text-gray-500 dark:text-gray-400 dark:bg-secondaryBG-dark rounded-lg w-full">
+        </div>
+        <div className="text-medium text-gray-500 dark:text-gray-400 dark:bg-secondaryBG-dark rounded-lg w-full flex-1">
           {activeTab === 'terms' && <TermsSetting />}
           {activeTab === 'comission' && <ComissionSetting />}
           {activeTab === 'banks' && <BanksSetting />}

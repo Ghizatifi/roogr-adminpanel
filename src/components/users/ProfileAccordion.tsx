@@ -3,6 +3,7 @@ import UserForm from './UserFormDetials';
 import UserProducts from './products/UserProducts';
 import UserInfo from './Info/UserInfo';
 import { useTranslation } from 'react-i18next';
+import { TabsPill } from '../TabsPill';
 import CategorySubscriptionUserid from './Category-subscription/UserCategorySubscription';
 import VerifactionRequestByUserid from './verifaction_requests/Userverifaction_requests';
 import { useParams } from 'react-router-dom';
@@ -59,25 +60,15 @@ const ProfileAccordion: React.FC<ProfileAccordionProps> = ({
   return (
     <div className="rounded-xl border border-stroke bg-white shadow-sm dark:border-strokedark dark:bg-boxdark">
       {/* Tabs */}
-      <div className="border-b border-stroke dark:border-strokedark">
-        <nav
-          className="flex gap-0 overflow-x-auto px-2 sm:px-4"
-          aria-label="Profile sections"
-        >
-          {tabs.map(({ id: tabId, label }) => (
-            <button
-              key={tabId}
-              type="button"
-              onClick={() => setActiveTab(tabId)}
-              className={`shrink-0 border-b-2 px-4 py-3 text-sm font-medium transition-colors whitespace-nowrap ${
-                activeTab === tabId
-                  ? 'border-primary text-primary dark:border-[#70F1EB] dark:text-[#70F1EB]'
-                  : 'border-transparent text-body hover:text-black dark:text-bodydark dark:hover:text-white'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+      <div className="border-b border-stroke px-2 py-3 dark:border-strokedark sm:px-4">
+        <nav className="overflow-x-auto" aria-label="Profile sections">
+          <TabsPill
+            tabs={tabs}
+            value={activeTab}
+            onChange={(id) => setActiveTab(id as ProfileTabId)}
+            glider={true}
+            className="w-full min-w-0 sm:w-auto"
+          />
         </nav>
       </div>
 

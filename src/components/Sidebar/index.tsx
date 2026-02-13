@@ -19,7 +19,13 @@ import { useDispatch } from 'react-redux';
 import { setLogout } from '../../store/slices/auth';
 import SidebarLink from './SidebarLink';
 import DropLink from './DropLink';
+import { CollapsedSubmenuPopover, type DropdownListType } from './CollapsedSubmenuPopover';
 import { Link } from 'react-router-dom';
+
+const logoLight = '/logo/logoLight.png';
+const logoDark = '/logo/logoDark.png';
+
+const HOVER_CLOSE_DELAY_MS = 120;
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -37,17 +43,40 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
   const dispatch = useDispatch();
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
-  type DropdownListType =
-    | 'User'
-    | 'Ads'
-    | 'Categories'
-    | 'Subscription'
-    | 'Support'
-    | 'Reports'
-    | 'BanList'
-    | null;
-  const [dropdownList, setDropdownList] = useState<DropdownListType>(null);
+  const [dropdownList, setDropdownList] = useState<DropdownListType | null>(null);
   const [open, setOpen] = useState<boolean>(false);
+
+  const [hoveredDropdown, setHoveredDropdown] = useState<DropdownListType | null>(null);
+  const [popoverAnchorRect, setPopoverAnchorRect] = useState<DOMRect | null>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const scheduleClose = () => {
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    closeTimeoutRef.current = setTimeout(() => {
+      setHoveredDropdown(null);
+      setPopoverAnchorRect(null);
+      closeTimeoutRef.current = null;
+    }, HOVER_CLOSE_DELAY_MS);
+  };
+  const cancelClose = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+  };
+  const handleCollapsedEnter = (type: DropdownListType, e: React.MouseEvent<HTMLElement>) => {
+    cancelClose();
+    setPopoverAnchorRect(e.currentTarget.getBoundingClientRect());
+    setHoveredDropdown(type);
+  };
+  const handleCollapsedLeave = () => {
+    scheduleClose();
+  };
+  const closePopover = () => {
+    cancelClose();
+    setHoveredDropdown(null);
+    setPopoverAnchorRect(null);
+  };
   const toggleMenu = (type: DropdownListType) => {
     setDropdownList(type);
     setOpen((prev) => (dropdownList === type ? !prev : true));
@@ -165,6 +194,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
       document.querySelector('body')?.classList.remove('sidebar-expanded');
     }
   }, [sidebarExpanded]);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    };
+  }, []);
+
   const logout = async () => {
     try {
       await axiosInstance.get(`/logout`);
@@ -178,46 +214,57 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
     <>
       <aside
         ref={sidebar}
-        className={`app-sidebar flex h-screen shrink-0 flex-col bg-boxdark duration-300 ease-in-out
-          ${isOpen ? 'w-[min(100vw,22rem)] sm:w-[17rem]' : 'w-0'}
-          absolute left-0 top-0 z-9999 rtl:left-auto rtl:right-0 shadow-xl
+        className={`app-sidebar flex h-screen shrink-0 flex-col rounded-r-xl border-r border-gray-200 bg-white shadow-card duration-300 ease-in-out dark:border-gray-700 dark:bg-secondaryBG-dark dark:shadow-none
+          ${isOpen ? 'w-[min(100vw,280px)] sm:w-[260px]' : 'w-0'}
+          absolute left-0 top-0 z-9999 rtl:left-auto rtl:right-0 rtl:rounded-l-xl rtl:rounded-r-none rtl:border-r-0 rtl:border-l rtl:border-l-gray-200 dark:rtl:border-l-gray-700
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full'}
           ${!isOpen ? 'sidebar-collapsed' : ''}`}
       >
-        {/* Barre du haut : fermer (mobile) + toggle (desktop) */}
-        <div className="flex min-h-[3.5rem] shrink-0 items-center justify-between gap-2 px-3 py-3 sm:px-4 md:min-h-0 md:py-4 md:px-4">
-          {/* Bouton fermer visible uniquement sur mobile/tablet */}
+        {/* Top: flèche + icône + logo à gauche */}
+        <div className="flex min-h-[3.5rem] shrink-0 items-center gap-2 px-3 pt-2 pb-3 sm:px-4 md:pt-3 md:pb-4 md:px-4">
+          <button
+            type="button"
+            aria-label={isOpen ? 'Réduire le menu' : 'Agrandir le menu'}
+            className="hidden shrink-0 rounded-[10px] bg-gray-100 p-2 text-[#A5A9C5] transition-all duration-300 hover:bg-[#F9FAFF] hover:text-[#3FC2BA] dark:bg-white/10 dark:text-bodydark dark:hover:bg-white/15 md:block"
+            onClick={toggleSidebar}
+          >
+            <FaChevronRight className={`text-lg transition-transform duration-300 rtl:rotate-180 ${isOpen ? 'rotate-180' : ''}`} />
+          </button>
+          {isOpen && (
+            <Link
+              to="/charts"
+              className="flex min-w-0 flex-1 items-center gap-2 truncate text-black dark:text-white sm:flex-initial"
+            >
+              <img
+                src={logoLight}
+                alt=""
+                width={32}
+                height={32}
+                className="h-8 w-8 shrink-0 object-contain dark:hidden"
+              />
+              <img
+                src={logoDark}
+                alt=""
+                width={32}
+                height={32}
+                className="hidden h-8 w-8 shrink-0 object-contain dark:block"
+              />
+              <span className="truncate text-lg font-bold sm:text-xl md:text-2xl">ROOGR</span>
+            </Link>
+          )}
           <button
             type="button"
             onClick={() => setSidebarOpen(false)}
             aria-label="Fermer le menu"
-            className="rounded-lg p-2 text-white hover:bg-sidebarHover md:hidden"
+            className="ml-auto rounded-lg p-2 text-[#A5A9C5] hover:bg-gray-100 hover:text-[#3FC2BA] dark:text-bodydark dark:hover:bg-white/10 md:hidden"
           >
             <FaTimes className="text-xl" />
           </button>
-          {/* Toggle expand/collapse visible uniquement sur desktop */}
-          <button
-            type="button"
-            aria-label={isOpen ? 'Réduire le menu' : 'Agrandir le menu'}
-            className={`absolute top-[1vh] z-50 rounded-[10px] bg-sidebarHover p-2 text-white transition-all duration-300 hover:opacity-90 dark:bg-sidebarHover
-              ${isOpen ? 'ltr:left-[14.5rem] rtl:right-[14.5rem]' : 'ltr:left-6 rtl:right-6'}
-              hidden md:block rtl:rotate-180`}
-            onClick={toggleSidebar}
-          >
-            <FaChevronRight className={`text-lg transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-          </button>
-          {isOpen && (
-            <div className="flex flex-1 justify-center md:justify-start">
-              <Link to="/charts" className="max-w-[10rem] truncate text-lg font-[400] text-[#70F1EB] sm:max-w-[12rem] sm:text-xl md:text-2xl">
-                {fName}
-              </Link>
-            </div>
-          )}
         </div>
-        <div className="no-scrollbar flex flex-1 flex-col overflow-y-auto bg-boxdark pb-4">
-          <nav className="px-3 sm:px-4 md:px-6">
+        <div className="no-scrollbar flex flex-1 flex-col overflow-y-auto pb-4">
+          <nav className="px-3 sm:px-4 md:px-5">
             <div>
-              <ul className="my-4 flex flex-col gap-1 sm:my-6 sm:gap-1.5">
+              <ul className="my-4 flex flex-col gap-2 sm:my-6">
                 {permission.charts == 1 && (
                   <SidebarLink
                     to={`/charts`}
@@ -233,12 +280,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                   <li>
                     <button
                       type="button"
-                      onClick={() => toggleMenu('Ads')}
-                      className={`group relative flex w-full items-center gap-2 rounded-[12px] p-2 text-left text-[15px] font-[400] rtl:text-right text-white duration-200 ease-out hover:bg-sidebarHover sm:gap-2.5 sm:rounded-[15px] sm:p-2.5 sm:text-[16px] md:text-[18px] ${
-                        dropdownList === 'Ads' && open ? 'bg-sidebarHover' : ''
+                      onClick={() => (isOpen ? toggleMenu('Ads') : undefined)}
+                      aria-haspopup="menu"
+                      aria-expanded={!isOpen ? hoveredDropdown === 'Ads' : dropdownList === 'Ads' && open}
+                      onMouseEnter={!isOpen ? (e) => handleCollapsedEnter('Ads', e) : undefined}
+                      onMouseLeave={!isOpen ? handleCollapsedLeave : undefined}
+                      className={`group relative flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-[15px] font-[400] rtl:text-right duration-200 ease-out sm:text-[16px] ${
+                        dropdownList === 'Ads' && open
+                          ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                          : !isOpen && hoveredDropdown === 'Ads'
+                            ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                            : 'text-[#A5A9C5] hover:bg-gray-100 hover:text-[#3FC2BA] dark:text-bodydark dark:hover:bg-white/5'
                       } ${!isOpen ? 'justify-center' : ''}`}
                     >
-                      <AiFillHome className="text-2xl shrink-0" />
+                      <AiFillHome className="text-2xl shrink-0 text-current" />
                       {isOpen && (
                         <>
                           <span className="sidebar-menu-text flex-1">{t('sidebar.ads.ads')}</span>
@@ -251,7 +306,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       )}
                     </button>
                     {dropdownList === 'Ads' && open && (
-                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-sidebarHover pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 animate-[fadeIn_0.2s_ease-out]">
+                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-gray-200 pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 dark:border-gray-600 animate-[fadeIn_0.2s_ease-out]">
                         {permission.ads.all == 1 && (
                           <DropLink closeSideBar={closeSideBar} to={`/products`} text={'sidebar.ads.all'} />
                         )}
@@ -271,12 +326,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                   <li>
                     <button
                       type="button"
-                      onClick={() => toggleMenu('User')}
-                      className={`group relative flex w-full items-center gap-2 rounded-[12px] p-2 text-left text-[15px] font-[400] rtl:text-right text-white duration-200 ease-out hover:bg-sidebarHover sm:gap-2.5 sm:rounded-[15px] sm:p-2.5 sm:text-[16px] md:text-[18px] ${
-                        dropdownList === 'User' && open ? 'bg-sidebarHover' : ''
+                      onClick={() => (isOpen ? toggleMenu('User') : undefined)}
+                      aria-haspopup="menu"
+                      aria-expanded={!isOpen ? hoveredDropdown === 'User' : dropdownList === 'User' && open}
+                      onMouseEnter={!isOpen ? (e) => handleCollapsedEnter('User', e) : undefined}
+                      onMouseLeave={!isOpen ? handleCollapsedLeave : undefined}
+                      className={`group relative flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-[15px] font-[400] rtl:text-right duration-200 ease-out sm:text-[16px] ${
+                        dropdownList === 'User' && open
+                          ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                          : !isOpen && hoveredDropdown === 'User'
+                            ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                            : 'text-[#A5A9C5] hover:bg-gray-100 hover:text-[#3FC2BA] dark:text-bodydark dark:hover:bg-white/5'
                       } ${!isOpen ? 'justify-center' : ''}`}
                     >
-                      <PiUsersFill className="text-2xl shrink-0" />
+                      <PiUsersFill className="text-2xl shrink-0 text-current" />
                       {isOpen && (
                         <>
                           <span className="sidebar-menu-text flex-1">{t('sidebar.users.users')}</span>
@@ -285,7 +348,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       )}
                     </button>
                     {dropdownList === 'User' && open && (
-                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-sidebarHover pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 animate-[fadeIn_0.2s_ease-out]">
+                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-gray-200 pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 dark:border-gray-600 animate-[fadeIn_0.2s_ease-out]">
                         {permission.users.all == 1 && <DropLink closeSideBar={closeSideBar} to={`/users`} text={'sidebar.users.all'} />}
                         {permission.users.advertisers == 1 && <DropLink closeSideBar={closeSideBar} to={`/users/advertiser`} text={'sidebar.users.advertisers'} />}
                         {permission.users.customers == 1 && <DropLink closeSideBar={closeSideBar} to={`/users/customer`} text={'sidebar.users.customers'} />}
@@ -299,12 +362,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                   <li>
                     <button
                       type="button"
-                      onClick={() => toggleMenu('Categories')}
-                      className={`group relative flex w-full items-center gap-2 rounded-[12px] p-2 text-left text-[15px] font-[400] rtl:text-right text-white duration-200 ease-out hover:bg-sidebarHover sm:gap-2.5 sm:rounded-[15px] sm:p-2.5 sm:text-[16px] md:text-[18px] ${
-                        dropdownList === 'Categories' && open ? 'bg-sidebarHover' : ''
+                      onClick={() => (isOpen ? toggleMenu('Categories') : undefined)}
+                      aria-haspopup="menu"
+                      aria-expanded={!isOpen ? hoveredDropdown === 'Categories' : dropdownList === 'Categories' && open}
+                      onMouseEnter={!isOpen ? (e) => handleCollapsedEnter('Categories', e) : undefined}
+                      onMouseLeave={!isOpen ? handleCollapsedLeave : undefined}
+                      className={`group relative flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-[15px] font-[400] rtl:text-right duration-200 ease-out sm:text-[16px] ${
+                        dropdownList === 'Categories' && open
+                          ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                          : !isOpen && hoveredDropdown === 'Categories'
+                            ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                            : 'text-[#A5A9C5] hover:bg-gray-100 hover:text-[#3FC2BA] dark:text-bodydark dark:hover:bg-white/5'
                       } ${!isOpen ? 'justify-center' : ''}`}
                     >
-                      <BiSolidCategory className="text-2xl shrink-0" />
+                      <BiSolidCategory className="text-2xl shrink-0 text-current" />
                       {isOpen && (
                         <>
                           <span className="sidebar-menu-text flex-1">{t('sidebar.categories.categories')}</span>
@@ -313,7 +384,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       )}
                     </button>
                     {dropdownList === 'Categories' && open && (
-                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-sidebarHover pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 animate-[fadeIn_0.2s_ease-out]">
+                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-gray-200 pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 dark:border-gray-600 animate-[fadeIn_0.2s_ease-out]">
                         {permission.categories.primary == 1 && <DropLink closeSideBar={closeSideBar} to={`/categories/main`} text={'sidebar.categories.main'} />}
                         {permission.categories.subscription == 1 && <DropLink closeSideBar={closeSideBar} to={`/categories/subscriptions`} text={'sidebar.categories.subscriptions'} />}
                         {permission.categories.region == 1 && <DropLink closeSideBar={closeSideBar} to={`/categories/map`} text={'sidebar.categories.map'} />}
@@ -326,12 +397,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                   <li>
                     <button
                       type="button"
-                      onClick={() => toggleMenu('Subscription')}
-                      className={`group relative flex w-full items-center gap-2 rounded-[12px] p-2 text-left text-[15px] font-[400] rtl:text-right text-white duration-200 ease-out hover:bg-sidebarHover sm:gap-2.5 sm:rounded-[15px] sm:p-2.5 sm:text-[16px] md:text-[18px] ${
-                        dropdownList === 'Subscription' && open ? 'bg-sidebarHover' : ''
+                      onClick={() => (isOpen ? toggleMenu('Subscription') : undefined)}
+                      aria-haspopup="menu"
+                      aria-expanded={!isOpen ? hoveredDropdown === 'Subscription' : dropdownList === 'Subscription' && open}
+                      onMouseEnter={!isOpen ? (e) => handleCollapsedEnter('Subscription', e) : undefined}
+                      onMouseLeave={!isOpen ? handleCollapsedLeave : undefined}
+                      className={`group relative flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-[15px] font-[400] rtl:text-right duration-200 ease-out sm:text-[16px] ${
+                        dropdownList === 'Subscription' && open
+                          ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                          : !isOpen && hoveredDropdown === 'Subscription'
+                            ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                            : 'text-[#A5A9C5] hover:bg-gray-100 hover:text-[#3FC2BA] dark:text-bodydark dark:hover:bg-white/5'
                       } ${!isOpen ? 'justify-center' : ''}`}
                     >
-                      <PiTicketFill className="text-2xl shrink-0" />
+                      <PiTicketFill className="text-2xl shrink-0 text-current" />
                       {isOpen && (
                         <>
                           <span className="sidebar-menu-text flex-1">{t('sidebar.requests.requests')}</span>
@@ -340,7 +419,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       )}
                     </button>
                     {dropdownList === 'Subscription' && open && (
-                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-sidebarHover pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 animate-[fadeIn_0.2s_ease-out]">
+                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-gray-200 pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 dark:border-gray-600 animate-[fadeIn_0.2s_ease-out]">
                         {permission.requests.attestation == 1 && <DropLink closeSideBar={closeSideBar} to={`/confirm/subscription`} text={'sidebar.requests.attestation'} />}
                         {permission.requests.category == 1 && <DropLink closeSideBar={closeSideBar} to={`/part/subscription`} text={'sidebar.requests.category'} />}
                       </ul>
@@ -353,12 +432,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                   <li>
                     <button
                       type="button"
-                      onClick={() => toggleMenu('Support')}
-                      className={`group relative flex w-full items-center gap-2 rounded-[12px] p-2 text-left text-[15px] font-[400] rtl:text-right text-white duration-200 ease-out hover:bg-sidebarHover sm:gap-2.5 sm:rounded-[15px] sm:p-2.5 sm:text-[16px] md:text-[18px] ${
-                        dropdownList === 'Support' && open ? 'bg-sidebarHover' : ''
+                      onClick={() => (isOpen ? toggleMenu('Support') : undefined)}
+                      aria-haspopup="menu"
+                      aria-expanded={!isOpen ? hoveredDropdown === 'Support' : dropdownList === 'Support' && open}
+                      onMouseEnter={!isOpen ? (e) => handleCollapsedEnter('Support', e) : undefined}
+                      onMouseLeave={!isOpen ? handleCollapsedLeave : undefined}
+                      className={`group relative flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-[15px] font-[400] rtl:text-right duration-200 ease-out sm:text-[16px] ${
+                        dropdownList === 'Support' && open
+                          ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                          : !isOpen && hoveredDropdown === 'Support'
+                            ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                            : 'text-[#A5A9C5] hover:bg-gray-100 hover:text-[#3FC2BA] dark:text-bodydark dark:hover:bg-white/5'
                       } ${!isOpen ? 'justify-center' : ''}`}
                     >
-                      <PiHeadsetFill className="text-2xl shrink-0" />
+                      <PiHeadsetFill className="text-2xl shrink-0 text-current" />
                       {isOpen && (
                         <>
                           <span className="sidebar-menu-text flex-1">{t('sidebar.support.support')}</span>
@@ -367,7 +454,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       )}
                     </button>
                     {dropdownList === 'Support' && open && (
-                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-sidebarHover pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 animate-[fadeIn_0.2s_ease-out]">
+                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-gray-200 pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 dark:border-gray-600 animate-[fadeIn_0.2s_ease-out]">
                         {permission.contact.inquiries == 1 && <DropLink closeSideBar={closeSideBar} to={`/contact-us/inquiries`} text={'sidebar.support.inquiries'} />}
                         {permission.contact.issues == 1 && <DropLink closeSideBar={closeSideBar} to={`/contact-us/issues`} text={'sidebar.support.issues'} />}
                         {permission.contact.suggestions == 1 && <DropLink closeSideBar={closeSideBar} to={`/contact-us/suggestions`} text={'sidebar.support.suggestions'} />}
@@ -380,12 +467,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                   <li>
                     <button
                       type="button"
-                      onClick={() => toggleMenu('Reports')}
-                      className={`group relative flex w-full items-center gap-2 rounded-[12px] p-2 text-left text-[15px] font-[400] rtl:text-right text-white duration-200 ease-out hover:bg-sidebarHover sm:gap-2.5 sm:rounded-[15px] sm:p-2.5 sm:text-[16px] md:text-[18px] ${
-                        dropdownList === 'Reports' && open ? 'bg-sidebarHover' : ''
+                      onClick={() => (isOpen ? toggleMenu('Reports') : undefined)}
+                      aria-haspopup="menu"
+                      aria-expanded={!isOpen ? hoveredDropdown === 'Reports' : dropdownList === 'Reports' && open}
+                      onMouseEnter={!isOpen ? (e) => handleCollapsedEnter('Reports', e) : undefined}
+                      onMouseLeave={!isOpen ? handleCollapsedLeave : undefined}
+                      className={`group relative flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-[15px] font-[400] rtl:text-right duration-200 ease-out sm:text-[16px] ${
+                        dropdownList === 'Reports' && open
+                          ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                          : !isOpen && hoveredDropdown === 'Reports'
+                            ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                            : 'text-[#A5A9C5] hover:bg-gray-100 hover:text-[#3FC2BA] dark:text-bodydark dark:hover:bg-white/5'
                       } ${!isOpen ? 'justify-center' : ''}`}
                     >
-                      <PiEnvelopeFill className="text-2xl shrink-0" />
+                      <PiEnvelopeFill className="text-2xl shrink-0 text-current" />
                       {isOpen && (
                         <>
                           <span className="sidebar-menu-text flex-1">{t('sidebar.reports.reports')}</span>
@@ -394,7 +489,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       )}
                     </button>
                     {dropdownList === 'Reports' && open && (
-                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-sidebarHover pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 animate-[fadeIn_0.2s_ease-out]">
+                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-gray-200 pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 dark:border-gray-600 animate-[fadeIn_0.2s_ease-out]">
                         {permission.reports.chats == 1 && <DropLink closeSideBar={closeSideBar} to={`/reports/chat`} text={'sidebar.reports.chat'} />}
                         {permission.reports.products == 1 && <DropLink closeSideBar={closeSideBar} to={`/reports/product`} text={'sidebar.reports.product'} />}
                       </ul>
@@ -406,12 +501,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                   <li>
                     <button
                       type="button"
-                      onClick={() => toggleMenu('BanList')}
-                      className={`group relative flex w-full items-center gap-2 rounded-[12px] p-2 text-left text-[15px] font-[400] rtl:text-right text-white duration-200 ease-out hover:bg-sidebarHover sm:gap-2.5 sm:rounded-[15px] sm:p-2.5 sm:text-[16px] md:text-[18px] ${
-                        dropdownList === 'BanList' && open ? 'bg-sidebarHover' : ''
+                      onClick={() => (isOpen ? toggleMenu('BanList') : undefined)}
+                      aria-haspopup="menu"
+                      aria-expanded={!isOpen ? hoveredDropdown === 'BanList' : dropdownList === 'BanList' && open}
+                      onMouseEnter={!isOpen ? (e) => handleCollapsedEnter('BanList', e) : undefined}
+                      onMouseLeave={!isOpen ? handleCollapsedLeave : undefined}
+                      className={`group relative flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-[15px] font-[400] rtl:text-right duration-200 ease-out sm:text-[16px] ${
+                        dropdownList === 'BanList' && open
+                          ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                          : !isOpen && hoveredDropdown === 'BanList'
+                            ? 'bg-[#F9FAFF] text-[#3FC2BA] dark:bg-white/10 dark:text-[#3FC2BA]'
+                            : 'text-[#A5A9C5] hover:bg-gray-100 hover:text-[#3FC2BA] dark:text-bodydark dark:hover:bg-white/5'
                       } ${!isOpen ? 'justify-center' : ''}`}
                     >
-                      <MdOutlineBlock className="text-2xl shrink-0" />
+                      <MdOutlineBlock className="text-2xl shrink-0 text-current" />
                       {isOpen && (
                         <>
                           <span className="sidebar-menu-text flex-1">{t('sidebar.ban-list.ban-list')}</span>
@@ -420,7 +523,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
                       )}
                     </button>
                     {dropdownList === 'BanList' && open && (
-                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-sidebarHover pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 animate-[fadeIn_0.2s_ease-out]">
+                      <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-gray-200 pl-4 ml-2 py-1 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4 rtl:ml-0 rtl:mr-2 dark:border-gray-600 animate-[fadeIn_0.2s_ease-out]">
                         {permission.banlist.chats == 1 && <DropLink closeSideBar={closeSideBar} to={`/Ban/users`} text={'sidebar.ban-list.users'} />}
                         {permission.banlist.products == 1 && <DropLink closeSideBar={closeSideBar} to={`/Ban/products`} text={'sidebar.ban-list.products'} />}
                         {permission.banlist.products == 1 && <DropLink closeSideBar={closeSideBar} to={`/Ban/chats`} text={'sidebar.ban-list.chats'} />}
@@ -451,16 +554,29 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, setIsOpen, isOpen }: SidebarProp
             <button
               type="button"
               onClick={logout}
-              className={`flex w-full items-center justify-center gap-2 rounded-xl bg-[#E02828] p-2 text-white transition-all duration-300 hover:brightness-110 sm:p-2.5 sm:rounded-xl ${
-                isOpen ? 'sm:justify-start' : 'w-auto justify-center px-2'
+              className={`mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#E02828] px-4 py-3 text-white font-medium transition-all duration-300 hover:brightness-110 ${
+                isOpen ? 'sm:justify-center sm:px-4' : 'w-auto justify-center px-3'
               }`}
             >
               <PiPowerFill className="text-xl shrink-0 sm:text-2xl" />
-              {isOpen && <span className="text-[15px] sm:text-[18px] md:text-[20px]"> {t('sidebar.sign-out')} </span>}
+              {isOpen && <span className="text-[15px] sm:text-[18px]">{t('sidebar.sign-out')}</span>}
             </button>
           </nav>
         </div>
       </aside>
+
+      {!isOpen && (
+        <CollapsedSubmenuPopover
+          isOpen={hoveredDropdown !== null}
+          anchorRect={popoverAnchorRect}
+          dropdownType={hoveredDropdown}
+          permission={permission}
+          onClose={closePopover}
+          onMouseEnter={cancelClose}
+          onMouseLeave={handleCollapsedLeave}
+          closeSideBar={closeSideBar}
+        />
+      )}
     </>
   );
 };

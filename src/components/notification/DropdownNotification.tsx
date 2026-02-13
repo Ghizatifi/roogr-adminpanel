@@ -25,16 +25,17 @@ const DropdownNotification = () => {
             setDropdownOpen(!dropdownOpen);
           }}
           to="#"
-          className="relative flex items-center justify-center dark:text-header-dark text-header-light"
+          className="relative flex h-9 w-9 items-center justify-center rounded-full text-[#374151] transition-colors hover:bg-[#F9FAFF] hover:text-[#111827] dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-white sm:h-10 sm:w-10"
         >
           <span
-            className={`absolute top-3 right-0 z-1 h-2 w-2 rounded-full bg-meta-1 ${
+            className={`absolute top-2.5 right-0 z-1 h-1.5 w-1.5 rounded-full ${
               notifying === false ? 'hidden' : 'inline'
             }`}
+            style={{ backgroundColor: '#E02828' }}
           >
-            <span className="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-meta-1 opacity-75"></span>
+            <span className="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full opacity-75" style={{ backgroundColor: '#E02828' }}></span>
           </span>
-          <MdOutlineNotificationsActive className="text-2xl" />
+          <MdOutlineNotificationsActive className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
         </Link>
 
         {dropdownOpen && (
